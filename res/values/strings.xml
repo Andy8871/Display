@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Display</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="vehicle_name">OBDII</string>
+    <string name="menu">Menu select</string>
+    <string name="DTC">Data trouble code</string>
+    <string name="DS">Data Stream</string>
+    <string name="ECUINFO">Vehicle information</string>
+	<string name="DEFAULT">Default window</string>
+	<string name="OK">OK</string>
+	<string name="CANCEL">Cancel</string>
+	<string name="SELECTALL">Select all</string>
+	<string name="UNSELECTALL">Unselect all</string>
+	<string name="DSItem">Item</string>
+	<string name="DSValue">Value</string>
+	<string name="DSUnit">Unit</string>
+</resources>
