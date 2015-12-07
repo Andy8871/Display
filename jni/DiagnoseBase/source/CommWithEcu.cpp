@@ -373,7 +373,7 @@ short CCommWithEcu::SetIoPort(unsigned char iIoOutputPort,
 		unsigned char iIoInputPort, char iOutputVoltage,
 		unsigned short ui16IoSelectItem)
 {
-	LOG_I(TAG, "********Begin SetIoPort****************");
+	LOG_DEBUG(TAG, "********Begin SetIoPort****************");
 	assert(
 			(0x00<iIoInputPort && iIoInputPort<0x0D) || iIoInputPort != DB15_CANBUS || iIoInputPort != DB15_CAN_PIN3_11 || iIoInputPort != DB15_VPW || iIoInputPort != DB15_PWM);
 
@@ -881,14 +881,10 @@ short CCommWithEcu::SetBps(double fBps, char iParityBit, char iDataBit)
 
 	memset(m_RecieveCommBuf, 0, 100);
 	int recvLength = m_SendRecv->ReceiveData(m_RecieveCommBuf, COMMBUFSIZE);
-	LOG_I(TAG, "SetBps recv data len--->%d", recvLength);
-	//__android_log_print(ANDROID_LOG_DEBUG, TAG, "SetBps recv data len--->%d", recvLength);
 	unsigned char *pchBuffer = m_RecieveCommBuf + MOVESIZE;
 	short ErrCode = *((char*) pchBuffer);
-	LOG_I(TAG, "***************************************");
 	if ((0 == recvLength) || (ErrCode != 0))
 	{
-		LOG_I(TAG, "%s->%d",__FILE__, __LINE__);
 		string strTemp;
 		char szTemp[50];
 
@@ -921,7 +917,6 @@ short CCommWithEcu::SetBps(double fBps, char iParityBit, char iDataBit)
 
 		sprintf(szTemp, "\n  char iDataBit = %d ", iDataBit);
 		strTemp += szTemp;
-		LOG_I(TAG, "%s->%d:%s",__FILE__, __LINE__, strTemp.c_str());
 		return 0;
 		/*if (0 == recvLength)
 			throw CEcuCommException(
@@ -930,7 +925,6 @@ short CCommWithEcu::SetBps(double fBps, char iParityBit, char iDataBit)
 		else
 			throw CEcuCommException(ErrCode, strTemp, "CCommWithEcu::SetBps()");*/
 	}
-	LOG_I(TAG, "%s->%d",__FILE__, __LINE__);
 	return ErrCode;
 }
 short CCommWithEcu::SetBRs(unsigned char BR1, unsigned char BR2,
@@ -3513,7 +3507,6 @@ CReceiveFrame CCommWithEcu::SendReceive(CSendFrame& SendFrame, bool bRepeat)
 			assChain.inValueAddres = (void*) &SendFrame; // 需要对输入值做分析
 			assChain.retType = 2;
 			m_vAssembleChain.push_back(assChain);
-			LOG_I(TAG, "%s[Line %d] return]", __FUNCTION__, __LINE__);
 			return recvFrame;
 		}
 
@@ -3539,7 +3532,6 @@ CReceiveFrame CCommWithEcu::SendReceive(CSendFrame& SendFrame, bool bRepeat)
 
 	if (0 == recvLength)
 	{
-		LOG_I(TAG, "%s[Line %d] return", __FUNCTION__, __LINE__);
 		return recvFrame;
 	}
 	//2006.6.27 
@@ -3552,7 +3544,6 @@ CReceiveFrame CCommWithEcu::SendReceive(CSendFrame& SendFrame, bool bRepeat)
 
 	if (0 == iFrameGroup)
 	{
-		LOG_I(TAG, "%s[Line %d] return by iFrameGroup[%d]", __FUNCTION__, __LINE__, iFrameGroup);
 		return recvFrame;
 	}
 
@@ -3592,7 +3583,6 @@ CReceiveFrame CCommWithEcu::SendReceive(CSendFrame& SendFrame, bool bRepeat)
 		if (binVector.size() > 0)
 			recvFrame += binVector;
 	}
-	LOG_I(TAG, "%s[Line %d] return by iFrameGroup[%d]", __FUNCTION__, __LINE__, iFrameGroup);
 	//debug(SendFrame, recvFrame);
 	return recvFrame;
 }

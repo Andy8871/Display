@@ -26,6 +26,8 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
+static const char* TAG = "CDataListFunc";
+
 CDataListFunc::CDataListFunc()
 {
 
@@ -551,6 +553,7 @@ short CDataListFunc::SystemInfoShow(CBinary binTitle,CBinaryGroup vecAllItemID)
 
 short CDataListFunc::DataListFlash(CBinary binTitle,CBinaryGroup vecAllItemID)
 {
+	LOG_DEBUG(TAG, "****DataListFlash****");
 	CMultiSelectShow::CSelectedItemData StreamSelected;
 	vector<string> vecAllItemName;
 	vector<string> vecAllItemUnit;
@@ -572,7 +575,6 @@ short CDataListFunc::DataListFlash(CBinary binTitle,CBinaryGroup vecAllItemID)
 
 	while(true)
 	{
-		LOG_I("CDataListFunc", "MultiSelect");
 		g_pDisplay->MultiSelect.Init(binTitle);
 		for(i=0;i<iAllItemNum;i++)
 		{
@@ -583,12 +585,10 @@ short CDataListFunc::DataListFlash(CBinary binTitle,CBinaryGroup vecAllItemID)
 		g_pDisplay->MultiSelect.AddMsg(adsGetTextString(CBinary("\x00\xFF\x00\x00\x00\x08",6)));
 		if(!g_pDisplay->MultiSelect.Show(StreamSelected))
 		{
-			LOG_I("CDataListFunc", "******************Select no***************************");
 			break;
 		}
 		else
 		{
-			LOG_I("CDataListFunc", "******************Select yes***************************");
 			DataListFuncInit();
 			vecSelItemName.clear();
 			vecSelItemUnit.clear();
@@ -641,6 +641,7 @@ short CDataListFunc::DataListFlash(CBinary binTitle,CBinaryGroup vecAllItemID)
 				{
 					if(!iCountFlag) //第一次进入时先显示---
 					{
+						LOG_DEBUG(TAG, "****第一次显示数据流****");
 						iCountFlag=1;
 						for(i=uiTop;i<uiBottom;i++)
 						{
@@ -657,6 +658,7 @@ short CDataListFunc::DataListFlash(CBinary binTitle,CBinaryGroup vecAllItemID)
 						
 						if(1 == uiFlag || 2 == uiFlag)//1:下翻 2:上翻
 						{
+							LOG_DEBUG(TAG, "****上下翻页,将还没有通讯的数据流显示完****");
 							iCountFlag = 0;
 							for(j=i;j<uiBottom;j++)//将还没通讯的显示完
 							{
@@ -685,7 +687,7 @@ short CDataListFunc::DataListFlash(CBinary binTitle,CBinaryGroup vecAllItemID)
 					return 0;
 				}
 
-				if (bChanged)
+			//	if (bChanged)
 				{
 					if (g_pDisplay->DataStream.Show(uiTop, uiNum) == 0x0b)
 					{

@@ -8,6 +8,8 @@
 #endif
 #include "ProFile.h"
 
+static const char* TAG = "CCommunicationWithDisplay";
+
 CCommunicationWithDisplay::CCommunicationWithDisplay()
 {
 	m_pCommBuffer = NULL;
@@ -34,7 +36,7 @@ bool CCommunicationWithDisplay::CreateConnect(JNIEnv* env)
 {
 	m_pCommBuffer = new char[0xFFFF];
 	assert(NULL != m_pCommBuffer);
-	__android_log_write(ANDROID_LOG_DEBUG, "CCommunicationWithDisplay",
+	__android_log_write(ANDROID_LOG_DEBUG, TAG,
 			"new CCommBase()");
 	m_pComm = new CCommBase();
 	if (NULL == m_pComm)
@@ -83,14 +85,14 @@ bool CCommunicationWithDisplay::CreateConnect(JNIEnv* env)
 	char* szDiagnosePath = m_pCommBuffer;
 	nOffset = strlen(szDiagnosePath) + 1;
 	CRunEnvironment::SetDiagnosisDirectory(szDiagnosePath);
-	__android_log_print(ANDROID_LOG_DEBUG, "CCommunicationWithDisplay", "SetDiagnosisDirectory>>>>>%s", szDiagnosePath);
+	//__android_log_print(ANDROID_LOG_DEBUG, TAG, "SetDiagnosisDirectory>>>>>%s", szDiagnosePath);
 
 	char* szLanguage = m_pCommBuffer + nOffset;
 	nOffset += strlen(szLanguage) + 1;
 	CRunEnvironment::SetLanguage(szLanguage);
-	__android_log_print(ANDROID_LOG_DEBUG, "CCommunicationWithDisplay", "SetDiagnosisDirectory>>>>>%s", szLanguage);
+	//__android_log_print(ANDROID_LOG_DEBUG, TAG, "SetDiagnosisDirectory>>>>>%s", szLanguage);
 
-	//CRunEnvironment::SetDemoMode(true);
+	CRunEnvironment::SetDemoMode(true);
 	return true;
 }
 
@@ -120,16 +122,20 @@ void CCommunicationWithDisplay::SendDataToDisplayWaitResponsion()
 
 	m_pCommBuffer[0] = (char) (m_iLenth / 256);
 	m_pCommBuffer[1] = (char) (m_iLenth % 256);
-
+	char buff[8] = {0};
+	string strCommData;
 	for (int i = 0; i < m_iLenth; ++i)
 	{
-		__android_log_print(ANDROID_LOG_DEBUG, "CCommunicationWithDisplay",
-				"Send data to UI 0x%02x", m_pCommBuffer[i]);
+		sprintf(buff, "0x%02x ", m_pCommBuffer[i]);
+		strCommData += buff;
+		/*__android_log_print(ANDROID_LOG_DEBUG, TAG,
+				"Send data to UI 0x%02x", m_pCommBuffer[i]);*/
 	}
+	__android_log_print(ANDROID_LOG_DEBUG, TAG, "Send data to UI:%s", strCommData.c_str());
 	int nLen = 0;
 	char* szRes = m_pComm->WriteForWait(m_pCommBuffer, m_iLenth, nLen);
-	__android_log_print(ANDROID_LOG_DEBUG, "CCommunicationWithDisplay",
-					"recv data from UI length ");
+	/*__android_log_print(ANDROID_LOG_DEBUG, TAG,
+					"recv data from UI length ");*/
 	if (szRes != NULL)
 	{
 		Clear();
@@ -213,14 +219,14 @@ short CCommunicationWithDisplay::Add(const char *pContain, short i16Length)
 {
 	// 将要添加的数据复制到缓冲区的末尾
 	memcpy(m_pCommBuffer + m_iDataLengthBuffer + 2, pContain, i16Length);
-	__android_log_print(ANDROID_LOG_DEBUG, "CCommunicationWithDisplay",
-			"m_pCommBuffer %s", m_pCommBuffer + m_iDataLengthBuffer + 2);
+	/*__android_log_print(ANDROID_LOG_DEBUG, TAG,
+			"m_pCommBuffer %s", m_pCommBuffer + m_iDataLengthBuffer + 2);*/
 
 	// 修正数据报长度
 	m_iDataLengthBuffer += i16Length;
 
-	__android_log_print(ANDROID_LOG_DEBUG, "CCommunicationWithDisplay",
-			"m_iDataLengthBuffer %d", m_iDataLengthBuffer);
+	/*__android_log_print(ANDROID_LOG_DEBUG, TAG,
+			"m_iDataLengthBuffer %d", m_iDataLengthBuffer);*/
 
 	return true;
 }
@@ -308,8 +314,8 @@ short CCommunicationWithDisplay::Add(unsigned short nData)
 	// 修正缓冲区长度
 	m_iDataLengthBuffer += 2;
 
-	__android_log_print(ANDROID_LOG_DEBUG, "CCommunicationWithDisplay",
-			"m_pCommBuffer %s", m_pCommBuffer);
+	/*__android_log_print(ANDROID_LOG_DEBUG, TAG,
+			"m_pCommBuffer %s", m_pCommBuffer);*/
 
 	return true;
 }

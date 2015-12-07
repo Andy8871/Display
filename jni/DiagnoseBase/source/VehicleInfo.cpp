@@ -127,7 +127,6 @@ short CVehicleInfo::Add (CBinary idExplain, string strContain)
 **************************************************************************************/
 short CVehicleInfo::Show ()
 {
-	LOG_I("CVehicleInfo", "Show vehicle information");
 	// ·¢ËÍÏûÏ¢
 	m_pSendAndReceive->SendDataToDisplayWaitResponsion();
 

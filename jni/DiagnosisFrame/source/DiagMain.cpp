@@ -11,18 +11,19 @@
 #include <android/log.h>
 #include "DiagnosisFrame.h"
 #include "RunLog.h"
+#include "LogCat.h"
+static const char* TAG = "DiagMain";
+
 CCommWithEcu* g_pCommEcu = NULL; // 全局通信接口
 CDisplay* g_pDisplay = NULL; // 全局显示接口
 //JavaVM* g_pVM = NULL;
 float g_flLibVersion;
 void Native_Run(JNIEnv* env, jobject* obj)
 {
-
 	//开始诊断
 	try
 	{
-		__android_log_write(ANDROID_LOG_DEBUG, "DiagMain",
-				"Native_Run");
+		LOG_DEBUG(TAG, "Native_Run");
 		CDiagnosisFrame theApp;
 		theApp.InitInstance(env);
 	} catch (...)

@@ -104,7 +104,7 @@ int CSendReceivePacket::SendData(unsigned char* pSendBuffer, int iSendLength)
 	int nErrorNo = m_pCommPort->Send(CmdPack, iSendLength + 8); // 发送数据帧
 	if (nErrorNo != (iSendLength + 8))
 	{
-		LOG_I(TAG, "Send failed %s", strerror(nErrorNo));
+		LOG_DEBUG(TAG, "Send failed %s", strerror(nErrorNo));
 	}
 	else
 	{
@@ -116,7 +116,7 @@ int CSendReceivePacket::SendData(unsigned char* pSendBuffer, int iSendLength)
 			sprintf(pBuff, "0x%02x ", CmdPack[i]);
 			strCmd += pBuff;
 		}
-		LOG_I(TAG, "Send:%s", strCmd.c_str());
+		LOG_DEBUG(TAG, "Send:%s", strCmd.c_str());
 	}
 	return iSendLength;
 // 上面打包结束
@@ -449,12 +449,13 @@ int CSendReceivePacket::ReceiveData(unsigned char* pReceiveBuffer,
 					strCmd += pBuff;
 				}
 				//char* pBuff = new char[iSendLength + 8];
-				LOG_I(TAG, "Receive data[%d]:%s", iReceiveLength, strCmd.c_str());
+				LOG_DEBUG(TAG, "Receive data[%d]:%s", iReceiveLength, strCmd.c_str());
 				/*__android_log_print(ANDROID_LOG_DEBUG, TAG, "Receive:%s", strCmd.c_str());*/
 			return iReceiveLength;
 		}
 	}
-	__android_log_print(ANDROID_LOG_DEBUG, TAG, "Receive data failed!!!");
+	LOG_DEBUG(TAG, "Receive data failed!!!");
+	//__android_log_print(ANDROID_LOG_DEBUG, TAG, "Receive data failed!!!");
 	return -1;
 }
 
@@ -481,9 +482,9 @@ bool CSendReceivePacket::OpenPort(void)
 		 */
 		bRet = m_pCommPort->Init(2);
 		if (bRet)
-			__android_log_print(ANDROID_LOG_DEBUG, "CSendReceivePacket", "OpenPort successfully");
+			LOG_DEBUG(TAG, "OpenPort successfully");
 		else
-			__android_log_print(ANDROID_LOG_DEBUG, "CSendReceivePacket", "OpenPort failed");
+			LOG_DEBUG(TAG, "OpenPort failed");
 	}
 
 	return bRet;

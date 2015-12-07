@@ -2368,13 +2368,13 @@ short CCommLayer::OBDIICommSet_J1850_VPW(CBinary &binECUIDs)
 	binLinkID.Add(0x01);
 	binLinkID.Add(0x00);
 
-	LOG_I(TAG, "%s[line %d] ReadDBFile [LINKLAYER.DB]", __FUNCTION__, __LINE__);
+	LOG_DEBUG(TAG, "ReadDBFile [LINKLAYER.DB]");
 	if(!CommonTools->ReadDBFile(Link_Info,"LINKLAYER.DB",binLinkID))
 	{
 		return 0;
 	}
 
-	LOG_I(TAG, "%s[line %d] InitLinkLayer", __FUNCTION__, __LINE__);
+	//LOG_I(TAG, "%s[line %d] InitLinkLayer", __FUNCTION__, __LINE__);
 	if(!InitLinkLayer())
 	{
 		return 0;
@@ -2389,12 +2389,12 @@ short CCommLayer::OBDIICommSet_J1850_VPW(CBinary &binECUIDs)
 	for(i=0;i<2;i++)
 	{
 		receFrm=g_pCommEcu->SendReceive(sendFrm);
-		LOG_I(TAG, "%s[line %d] receFrm.size() = %d", __FUNCTION__, __LINE__, receFrm.size());
+		LOG_DEBUG(TAG, "receFrm.size() = %d", receFrm.size());
 		if(receFrm.size())
 		{
 			for(j=0;j<receFrm[0].size();j++)
 			{
-				LOG_I(TAG, "%s[%d] receFrm[0].size() = %d", __FUNCTION__, __LINE__, receFrm[0].size());
+				LOG_DEBUG(TAG, "receFrm[0].size() = %d", receFrm[0].size());
 				binReceData=receFrm[0][j];
 				if(binReceData.GetSize()>6)
 				{
@@ -2411,7 +2411,7 @@ short CCommLayer::OBDIICommSet_J1850_VPW(CBinary &binECUIDs)
 	}
 
 	iRet=binReceData.GetSize();
-	LOG_I(TAG, "%s[%d] return code %d", __FUNCTION__, __LINE__, iRet);
+	LOG_DEBUG(TAG, "return code %d", iRet);
 	return iRet;
 }
 
@@ -2480,7 +2480,7 @@ short CCommLayer::OBDIISetIdle()
 {
 	CSendFrame sfTxf;
 	CBinary binLinkCmd;
-	LOG_I(TAG, "OBDIISetIdle[line %d] busID--->%d", __LINE__,bCommBUS_ID);
+	LOG_DEBUG(TAG, "OBDIISetIdle busID--->%d", bCommBUS_ID);
 	switch(bCommBUS_ID)
 	{
 	case P_KWP2000_ON_K_LINE:

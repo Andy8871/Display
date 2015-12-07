@@ -306,7 +306,6 @@ short CBasicDiagnosticUnit::OBDIIDiagnose()
 	OnEnter(1);
 	binCurECU_ID=CBinary("\xE0\x00\x00\x01",4);
 	binCommECU_ID=binCurECU_ID;
-	LOG_I(TAG, "[OBDIIDiagnose:%d]Scan the protocols", __LINE__);
 	for(i=0;i<1;i++)
 	{
 		if(CommLayer->OBDIICommSet_15765(binECUIDs)>0)
@@ -335,7 +334,6 @@ short CBasicDiagnosticUnit::OBDIIDiagnose()
 	CommLayer->OBDIISetIdle();
 
 	iNum=binECUIDs.GetSize();
-	LOG_I(TAG, "%s [line %d] ECU ID number--->%d", __FUNCTION__, __LINE__,iNum);
 	if(!binECUIDs.GetSize())
 	{
 		g_pDisplay->MessageBox(CBinary("\x00\xFF\x00\x00\x00\x11",6),STRID_ERROR);
@@ -351,11 +349,11 @@ short CBasicDiagnosticUnit::OBDIIDiagnose()
 		}
 	}
 	
-	for (int i = 0; i < vecSysStr.size(); ++i)
+	/*for (int i = 0; i < vecSysStr.size(); ++i)
 	{
 		LOG_I(TAG, "[OBDIIDiagnose:%d]Systemt name--->%s", __LINE__,vecSysStr[i].c_str());
 	}
-
+*/
 	while(1)
 	{
 		iSelect=CommonTools->MenuAddItemStr(adsGetTextString(CBinary("\x00\xFF\x04\x00\x00\x01",6)),vecSysStr);
@@ -392,7 +390,7 @@ short CBasicDiagnosticUnit::OBDIIFuncShow(string strTitle)
 	CBinaryGroup vecDSItemID;
 	
 
-	LOG_I(TAG, "[OBDIIFuncShow394]titile--->%s", strTitle.c_str());
+	//LOG_I(TAG, "[OBDIIFuncShow394]titile--->%s", strTitle.c_str());
 	if(!GetFuncItemStr(vecItemStrID,vecFuncItemStr))
 		return 0;
 	
@@ -400,10 +398,10 @@ short CBasicDiagnosticUnit::OBDIIFuncShow(string strTitle)
 	DataListFunc->GetDSGrpItems(vecDSItemID,1);
 	DataListFunc->SystemInfoShow(vecItemStrID[1],vecDSItemID);
 
-	for (int i = 0; i < vecFuncItemStr.size(); ++i)
+	/*for (int i = 0; i < vecFuncItemStr.size(); ++i)
 	{
 		LOG_I(TAG, "[OBDIIFuncShow404]Function item%d--->%s", i, vecFuncItemStr[i].c_str());
-	}
+	}*/
 	while(1)
 	{
 		iSelect=CommonTools->MenuAddItemStr(strTitle,vecFuncItemStr);

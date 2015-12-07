@@ -42,7 +42,10 @@ bool CCommBase::Connect(JNIEnv* pEnv)
 
 	env = pEnv;
 	/* 获取Java回掉函数所在的类 */
-	m_clazz = env->FindClass("com/TD/Model/Diagnose");
+	jclass clazz = env->FindClass("com/TD/Model/Diagnose");
+	if (NULL == clazz)
+		return false;
+	m_clazz = clazz;
 
 	/* 获取Java回掉函数guiCallbackImmediate */
 	if (NULL == m_guiCallbackImmediate && NULL != m_clazz)
@@ -136,21 +139,22 @@ char* CCommBase::WriteForWait(const char* buff, int nLen, int & outLen)
 	jbyteArray objRes = (jbyteArray) env->CallStaticObjectMethod(m_clazz,
 			m_guiCallbackWaitForResponse, arrBuff);
 
+	/* 释放分配的内存 */
+	env->ReleaseByteArrayElements(arrBuff, pBuff, JNI_ABORT);
+	env->DeleteLocalRef(arrBuff);
+	arrBuff = NULL;
 	if (NULL == objRes)
 	{
-		/* 释放分配的内存 */
-		env->ReleaseByteArrayElements(arrBuff, pBuff, 0);
-		env->DeleteLocalRef(arrBuff);
-		arrBuff = NULL;
 		return NULL;
 	}
 
 	/* 将UI返回的操作结果从Java byte[]转换成C语言的字符指针 */
 	outLen = env->GetArrayLength(objRes);
 	memset(m_comBuff, 0, 0xFFFF);
-	jbyte* pRes =  env->GetByteArrayElements(objRes, 0);
+	jbyte* pRes =  env->GetByteArrayElements(objRes, JNI_FALSE);
 	memcpy(m_comBuff, (char*)pRes, outLen);
-	env->ReleaseByteArrayElements(objRes, pRes, JNI_COMMIT);
+	/* 释放分配的内存 */
+	env->ReleaseByteArrayElements(objRes, pRes, JNI_ABORT);
 	env->DeleteLocalRef(objRes);
 	objRes = NULL;
 	return m_comBuff;
