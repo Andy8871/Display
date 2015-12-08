@@ -6,6 +6,7 @@ package com.TD.Controller;
 import java.util.StringTokenizer;
 
 import com.TD.Display.ActivityIndentify;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -76,16 +77,30 @@ public class OriginalState implements ControllerState, ControllerProtocol, Activ
 			/**
 			 * 需要添加代码来处理诊断模块启动成功以后的请求信息
 			 */
+			byte[] cmd = null;
+			byte[] temp = new byte[0xFFFF];
+			int nOffset = 0;
+			/*诊断程序运行工作目录*/
 			String strDiagnosePath = "/sdcard/Vpecker/scan/OBDII/OBDII/EN";
-			String strLanguage = "EN";
-			int nCmdLen = strDiagnosePath.length() + strLanguage.length() + 1;
-			byte[] cmd = new byte[nCmdLen];
-			Log.i(TAG, "cmd byte len = " + cmd.length);
-			System.arraycopy(strDiagnosePath.getBytes(), 0, cmd, 0, strDiagnosePath.length());
-			cmd[strDiagnosePath.length()] = 0;
+			System.arraycopy(strDiagnosePath.getBytes(), 0, temp, 0, strDiagnosePath.length());
+			nOffset = strDiagnosePath.length();
+			temp[nOffset] = 0;
+			nOffset += 1;
 			
-			System.arraycopy(strLanguage.getBytes(), 0, cmd, strDiagnosePath.length() + 1, strLanguage.length());
-			//cmd += strLanguage.getBytes();
+			/* 当前系统语言 */
+			String strLanguage = "EN";
+			System.arraycopy(strLanguage.getBytes(), 0, temp, nOffset, strLanguage.length());
+			nOffset += strLanguage.length();
+			temp[nOffset] = 0;
+			nOffset += 1;
+			
+			/* 运行模式：1 demo， 0 run */
+			byte bDemo = 1;
+			temp[nOffset] = bDemo;
+			nOffset += 1;
+			
+			cmd = new byte[nOffset];
+			System.arraycopy(temp, 0, cmd, 0, nOffset);
 			controller.resultToDiagnose(cmd);
 			break;
 		}

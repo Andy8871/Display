@@ -2,8 +2,6 @@ package com.TD.Display;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import android.R.integer;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -30,12 +28,12 @@ public class MultiSelectActivity  extends Activity implements ActivityIndentify,
 	private TextView tvTitle = null;
 	private ArrayList<String> infoList;
 	private CheckBoxListAdapter adapter;
-	private HashMap<Integer, Boolean> isSelected = null;
+	//private HashMap<Integer, Boolean> isSelected = null;
 	private ListView lv;
 	//private ViewHolder vh;
 	
 	private byte[] selectItem;
-	private byte selected = 0;
+	//private byte selected = 0;
 	private Button btnOK = null;
 	private Button btnCancel = null;
 	private Button btnSelectall = null;
@@ -75,7 +73,7 @@ public class MultiSelectActivity  extends Activity implements ActivityIndentify,
 		{
 			adapter = new CheckBoxListAdapter(this, infoList, R.layout.item_checkboxlist, R.id.checkbox, R.id.item);
 			lv.setAdapter(adapter);
-			isSelected = new HashMap<Integer, Boolean>(counts);
+			//isSelected = new HashMap<Integer, Boolean>(counts);
 			selectItem = new byte[(counts / 8) + 1];
 		}
 	}

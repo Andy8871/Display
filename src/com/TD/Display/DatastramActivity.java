@@ -7,22 +7,18 @@ import java.util.List;
 import com.TD.Controller.ControllerProtocol;
 import com.TD.Controller.GUIParam;
 import com.example.display.R;
-
-import android.R.integer;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Messenger;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
 
 public class DatastramActivity extends Activity implements ActivityIndentify, ControllerProtocol {
 
@@ -131,11 +127,12 @@ public class DatastramActivity extends Activity implements ActivityIndentify, Co
 					
 					GUIParam param = (GUIParam) args.getSerializable(CTL_GUI_PARAM);
 					updateView(param);
-					/*Bundle bundle = new Bundle();
+					
+					Bundle bundle = new Bundle();
 					bundle.putInt(GUI_REQ, V_REQUEST_HAS_UPDATED_VIEW);
 					bundle.putInt("topItem", topItem);
 					bundle.putInt("itemsInView", itemsInView);
-					sendDataToDiagnose(bundle);*/
+					sendDataToDiagnose(bundle);
 					break;
 				}
 				}
@@ -171,10 +168,12 @@ public class DatastramActivity extends Activity implements ActivityIndentify, Co
 			for (int i = 0; i < nCounts * 3; i += 3)
 			{
 				HashMap<String, Object> item = new HashMap<String, Object>();
-				item.put(from[0], contents[i]);			//item name
-				item.put(from[1], contents[i + 1]);		//item value
-				item.put(from[2], contents[i + 2]);		//item unit
+				item.put(from[0], update[i]);			//item name
+				item.put(from[1], update[i + 1]);		//item value
+				item.put(from[2], update[i + 2]);		//item unit
 				data.add(item);
+				
+				Log.i(TAG, "show data " + update[i] + " " + update[i + 1] + " " + update[i + 2]);
 			}
 		}
 		adapter.notifyDataSetChanged();

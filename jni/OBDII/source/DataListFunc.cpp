@@ -1,7 +1,7 @@
 // DataListFunc.cpp: implementation of the CDataListFunc class.
 //
 //////////////////////////////////////////////////////////////////////
-
+#include <time.h>
 #include "DiagStd.h"
 #include "CommWithEcu.h"
 #include "Display.h"
@@ -553,7 +553,7 @@ short CDataListFunc::SystemInfoShow(CBinary binTitle,CBinaryGroup vecAllItemID)
 
 short CDataListFunc::DataListFlash(CBinary binTitle,CBinaryGroup vecAllItemID)
 {
-	LOG_DEBUG(TAG, "****DataListFlash****");
+	/*LOG_DEBUG(TAG, "****DataListFlash****");*/
 	CMultiSelectShow::CSelectedItemData StreamSelected;
 	vector<string> vecAllItemName;
 	vector<string> vecAllItemUnit;
@@ -619,8 +619,8 @@ short CDataListFunc::DataListFlash(CBinary binTitle,CBinaryGroup vecAllItemID)
 			short uiBottom=uiTop+uiNum;
 			unsigned char iCountFlag = 0;
 			unsigned char uiFlag;
-			bool bChanged = false;
-			vector<string> vSaveValue;
+			/*bool bChanged = false;
+			vector<string> vSaveValue;*/
 			//vSaveValue.reserve((uiNum < vSaveValue.max_size()) ? uiNum : vSaveValue.max_size());
 			if(!CommonTools->GetDataBase(dbData,"DATALIST.DB"))
 			{
@@ -636,17 +636,17 @@ short CDataListFunc::DataListFlash(CBinary binTitle,CBinaryGroup vecAllItemID)
 					uiBottom = uiAll;
 
 				Flag_Success=false;
-				bChanged = false;
+				/*bChanged = false;*/
 				for(i=uiTop;i<uiBottom;i++)
 				{
 					if(!iCountFlag) //第一次进入时先显示---
 					{
-						LOG_DEBUG(TAG, "****第一次显示数据流****");
+						/*LOG_DEBUG(TAG, "****The first show****");*/
 						iCountFlag=1;
 						for(i=uiTop;i<uiBottom;i++)
 						{
 							/* 初始化数据流的值,所有的数据流值都初始为 "---" */
-							vSaveValue.push_back("---");
+							/*vSaveValue.push_back("---");*/
 							g_pDisplay->DataStream.Add(vecSelItemName[i],"---",vecSelItemUnit[i]);
 						}
 						Flag_Success=true;
@@ -655,10 +655,10 @@ short CDataListFunc::DataListFlash(CBinary binTitle,CBinaryGroup vecAllItemID)
 					else
 					{
 						uiFlag = g_pDisplay->DataStream.AcceptMsg();
-						
+
 						if(1 == uiFlag || 2 == uiFlag)//1:下翻 2:上翻
 						{
-							LOG_DEBUG(TAG, "****上下翻页,将还没有通讯的数据流显示完****");
+							/*LOG_DEBUG(TAG, "****Page up or down, show the data stream was left****");*/
 							iCountFlag = 0;
 							for(j=i;j<uiBottom;j++)//将还没通讯的显示完
 							{
@@ -671,12 +671,14 @@ short CDataListFunc::DataListFlash(CBinary binTitle,CBinaryGroup vecAllItemID)
 						{
 							Flag_Success=true;
 						}
-						/* 如果有一条数据流的值发生了改变，则更新显示 */
+/*
+						 如果有一条数据流的值发生了改变，则更新显示
 						if (StringValue != vSaveValue[i])
 						{
 							vSaveValue[i] = StringValue;
 							bChanged = true;
 						}
+						LOG_DEBUG(TAG, "Item :%s %s %s", vecSelItemName[i].c_str(), StringValue.c_str(), vecSelItemUnit[i].c_str());*/
 						g_pDisplay->DataStream.Add(vecSelItemName[i],StringValue,vecSelItemUnit[i]);
 					}
 					
@@ -687,13 +689,11 @@ short CDataListFunc::DataListFlash(CBinary binTitle,CBinaryGroup vecAllItemID)
 					return 0;
 				}
 
-			//	if (bChanged)
+				if (g_pDisplay->DataStream.Show(uiTop, uiNum) == 0x0b)
 				{
-					if (g_pDisplay->DataStream.Show(uiTop, uiNum) == 0x0b)
-					{
-						DataListEndComm();
-						break;
-					}
+					LOG_DEBUG(TAG, "return from data stream");
+					DataListEndComm();
+					break;
 				}
 			}
 			dbData.Close();
@@ -828,6 +828,16 @@ short CDataListFunc::DataListEndComm()
 
 short CDataListFunc::ReadDataAndCalculate(CDatabase &dbData,CBinary binItemIndex,string &StringValue)
 {
+	if (CRunEnvironment::GetDemoMode())
+	{
+		srand(clock());
+		int value = rand() % 256;
+		char szValue[16] = {0};
+		sprintf(szValue, "%d", value);
+		StringValue = szValue;
+		return 1;
+	}
+
 	vector<CBinary> vecItemInfo;
 	CBinary binCmdID=NULL;
 	CBinary binData=NULL;

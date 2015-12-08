@@ -14,6 +14,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Handler.Callback;
@@ -53,11 +54,18 @@ public class Controller extends Service implements ControllerProtocol,
 			return btnID;
 		}
 	};
-
+	
+	public class ControllerBinder extends Binder{
+		public Controller getController()
+		{
+			return Controller.this;
+		}
+	}
+	
+	private final IBinder mBinder = new ControllerBinder();
 	@Override
 	public IBinder onBind(Intent intent) {
-		Log.i(TAG, "onBind");
-		return null;
+		return mBinder;
 	}
 
 	@Override
@@ -265,4 +273,6 @@ public class Controller extends Service implements ControllerProtocol,
 		public final int BTN_POSITIVE = 2;
 		public int callback(int btn);
 	}
+	
+	
 }

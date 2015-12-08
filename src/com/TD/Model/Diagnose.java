@@ -2,7 +2,6 @@ package com.TD.Model;
 
 import com.TD.Assist.CommData;
 
-import android.R.integer;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;

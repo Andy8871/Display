@@ -56,6 +56,7 @@ public interface ControllerProtocol {
 	public final int M_REQUEST_SHOWMENU = 3007;
 	public final int M_REQUEST_SHOWDTC = 3008;
 	*/
+	/* 用户界面按钮信息 ，用户自定义添加*/
 	public final int GUI_MSG_BTN_NOBUTTON = 0X00;
 	public final int GUI_MSG_BTN_OK = 	0X01;
 	public final int GUI_MSG_BTN_CANCEL = 0X02;
@@ -71,8 +72,25 @@ public interface ControllerProtocol {
 	public final int GUI_MSG_BTN_PREVFINISH = 0X19;
 	public final int GUI_MSG_BTN_PRINT = 	0X40;
 	public final int GUI_MSG_BTN_HELP = 	0X80;
-	
-	//诊断与UI通讯数据类型
+
+	/* 系统按钮信息 */
+	public final int adsIDNOCLICK = 0x00;
+	public final int adsIDOK = 0x01;
+	public final int adsIDCANCEL = 0x02;
+	public final int adsIDYES = 0x03;
+	public final int adsIDNO = 0x04;
+	public final int adsIDRETRY = 0x05;
+	public final int adsIDIGNORE = 0x06;
+	public final int adsIDABORT = 0x07;
+	public final int adsIDPREV = 0x08;
+	public final int adsIDNEXT = 0x09;
+	public final int adsIDFINISH = 0x0A;
+	public final int adsIDBACK = 0x0B;
+	public final int adsIDCHANNEL = 0x0C;// AUDI
+	public final int adsIDSHORTTESTENTER = 0x0D;// SHORTTESTENTER
+	public final int adsIDSTOP = 0x1D;// Datadrv
+
+	/* 诊断与UI通讯数据类型 */
 	public final int GUI_MENU = 0;							//菜单显示界面
 	public final int GUI_TROUBLE_CODE = 10;					//故障码显示界面
 	public final int GUI_DATA_STREAM = 20;					//数据流显示界面

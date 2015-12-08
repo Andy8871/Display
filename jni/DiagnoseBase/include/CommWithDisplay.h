@@ -24,7 +24,8 @@ public:
 
 protected:
 	char *m_pCommBuffer;            // 共享内存缓冲 = 2字节长度 + 数据包内容	
-
+	char *m_pSendBufferSaved;		// 保存上一次发送数据缓存
+	char *m_pReceiveBufferSaved;	// 保存上一次接收数据缓存
 	unsigned short m_iDataLengthBuffer;       // 数据包内容长度
 #ifdef WIN32
 	HANDLE hSemaphore;
