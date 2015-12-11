@@ -14,12 +14,29 @@
 
 #define TAG "CCommBase"
 
+CCommBase* CCommBase::m_pInstance = NULL;
+
 CCommBase::CCommBase()
 {
 	env = NULL;
 	m_comBuff = NULL;
 	m_guiCallbackWaitForResponse = NULL;
 	m_guiCallbackImmediate = NULL;
+}
+
+CCommBase* CCommBase::GetInstance()
+{
+	Lock lock;
+
+	if (NULL == m_pInstance)
+	{
+		lock.GetLock();
+		if (NULL == m_pInstance)
+			m_pInstance = new CCommBase();
+		lock.ReleaseLock();
+	}
+
+	return m_pInstance;
 }
 
 /**
