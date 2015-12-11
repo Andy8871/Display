@@ -38,7 +38,7 @@ bool CCommunicationWithDisplay::CreateConnect(JNIEnv* env)
 	if (NULL == m_pCommBuffer)
 		return false;
 
-	m_pComm = new CCommBase();
+	m_pComm = CCommBase::GetInstance();
 	if (NULL == m_pComm)
 		return false;
 
