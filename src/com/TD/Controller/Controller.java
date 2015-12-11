@@ -92,6 +92,8 @@ public class Controller extends Service implements ControllerProtocol,
 	public void onDestroy() {
 		Log.i(TAG, "onDestroy");
 		unregisterReceiver(diagReceiver);
+		
+		//while (inboxHandler.hasMessages(TRIM_MEMORY_RUNNING_CRITICAL))
 		// sm = null;
 		super.onDestroy();
 	}
@@ -127,6 +129,15 @@ public class Controller extends Service implements ControllerProtocol,
 	public final void notifyToUI(Intent intent) {
 		if (intent != null) {
 			sendBroadcast(intent);
+		}
+	}
+	
+	public final void clearMessageHandler()
+	{
+		if (inboxHandler.hasMessages(0xFF))
+		{
+			Log.i(TAG, "need to clear the message");
+			inboxHandler.removeMessages(0xFF);
 		}
 	}
 	

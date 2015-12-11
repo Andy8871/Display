@@ -95,7 +95,7 @@ public class OriginalState implements ControllerState, ControllerProtocol, Activ
 			nOffset += 1;
 			
 			/* 运行模式：1 demo， 0 run */
-			byte bDemo = 1;
+			byte bDemo = 0;
 			temp[nOffset] = bDemo;
 			nOffset += 1;
 			

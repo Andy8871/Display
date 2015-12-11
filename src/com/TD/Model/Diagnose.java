@@ -68,6 +68,7 @@ public class Diagnose extends Thread implements ControllerProtocol{
 		Log.i(TAG, "guiCallbackImmediate()");
 		try {
 			Message msg = outboxHandler.obtainMessage();
+			msg.what = 0xFF;
 			msg.obj = param;
 			msg.sendToTarget();
 		}
@@ -88,12 +89,13 @@ public class Diagnose extends Thread implements ControllerProtocol{
 		byte[] cmd = null;
 		try {
 			String strData = new String();
-			for (byte e : param)
+			/*for (byte e : param)
 			{
 				strData += String.format("0x%02x ", e);
-			}
+			}*/
 			Log.i(TAG, "send data to UI:" + strData);
 			Message msg = outboxHandler.obtainMessage();
+			msg.what = 0xFF;
 			msg.obj = param;
 			msg.sendToTarget();
 		}

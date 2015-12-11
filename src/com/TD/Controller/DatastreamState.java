@@ -89,16 +89,6 @@ public class DatastreamState implements ControllerState, ControllerProtocol {
 			}
 			guiParam.setContents(content);
 			notifyToUI(C_SHOW_DS, guiParam);
-			/*Log.i(TAG, "send command to diagnose");
-			byte[] cmd = new byte[16];
-			cmd[0] = 0;
-			cmd[1] = 5;
-			cmd[4] = (byte) 0xFF;
-			cmd[5] = (byte) ((topItems >> 8) & 0xFF); // 当前屏显示第一行ID（从0开始） 高字节
-			cmd[6] = (byte) (topItems & 0xFF); // 当前屏显示第一行ID（从0开始） 低字节
-			cmd[7] = (byte) ((itemsInView >> 8) & 0xFF); // 当前屏显示条目数量 高字节
-			cmd[8] = (byte) (itemsInView & 0xFF); // 当前屏显示条目数量 低字节
-			controller.resultToDiagnose(cmd);*/
 			break;
 		}
 		default:
@@ -119,13 +109,11 @@ public class DatastreamState implements ControllerState, ControllerProtocol {
 			byte[] cmd = new byte[16];
 			cmd[0] = 0;
 			cmd[1] = 5;
-			cmd[4] = (byte) adsIDBACK;
-			/*cmd[5] = (byte) ((topItems >> 8) & 0xFF); // 当前屏显示第一行ID（从0开始） 高字节
-			cmd[6] = (byte) (topItems & 0xFF); // 当前屏显示第一行ID（从0开始） 低字节
-			cmd[7] = (byte) ((itemsInView >> 8) & 0xFF); // 当前屏显示条目数量 高字节
-			cmd[8] = (byte) (itemsInView & 0xFF); // 当前屏显示条目数量 低字节
-*/			controller.resultToDiagnose(cmd);
+			cmd[4] = (byte) 0x0b;
+			controller.resultToDiagnose(cmd);
+			controller.clearMessageHandler();
 			controller.changeState(new MultiSelectState(controller));
+			
 			break;
 		}
 		case V_REQUEST_SELECT_ITEM: {

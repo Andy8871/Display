@@ -17,9 +17,6 @@ extern float g_flLibVersion;
 #define VEHICLE_NAME	"OBDII"
 #define DIAG_VERSION	12.0
 
-/*typedef CDisplay *(*pGetDisplayObject)(void);
-typedef CCommWithEcu *(*pGetCommWithEcuObject)(void);*/
-
 int DiagnosisMain();
 
 CDiagnosisFrame::CDiagnosisFrame(void)
