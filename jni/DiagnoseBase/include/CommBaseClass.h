@@ -12,17 +12,42 @@
 #include <string>
 using namespace std;
 
+class Lock{
+public:
+	Lock():mutex(PTHREAD_MUTEX_INITIALIZER){
+		pthread_mutex_init(&mutex, NULL);
+	}
+	void GetLock()
+	{
+		pthread_mutex_lock(&mutex);
+	}
+	void ReleaseLock()
+	{
+		pthread_mutex_unlock(&mutex);
+	}
+	~Lock()
+	{
+		pthread_mutex_destroy(&mutex);
+	}
+private:
+	pthread_mutex_t mutex;
+};
+
 class CCommBase
 {
 public:
-	CCommBase();
+	static CCommBase* GetInstance();
+public:
 	~CCommBase();
 	bool Connect(JNIEnv* env);
 	void Disconnect();
 	bool Read(char* buff, int nSize);
 	char* WriteForWait(const char* buff, int nLen, int & outLen);
 	bool WriteForImmediate(const char* buff, int nLen);
-
+protected:
+	CCommBase();
+protected:
+	static CCommBase* m_pInstance;
 private:
 	void LogExceptionFromJava();
 	void ThrowExceptionToJava(string strNote);
