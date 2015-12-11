@@ -22,7 +22,7 @@
 #include	"Information.h"
 #include	"RunEnvironment.h"
 #include    "assert.h"
-#include	"SecurityBaseClass.h"
+#include	"../../Security/include/SecurityBaseClass.h"
 
 extern CDatabase m_MenuTxtDb; //FOR MENU DISPLAY
 

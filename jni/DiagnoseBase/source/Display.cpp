@@ -6,7 +6,7 @@
 //#include "Net.h"
 #include "ResStr.h"
 #include "Information.h"
-#include "SecurityBaseClass.h"
+//#include "SecurityBaseClass.h"
 //#pragma comment (lib,"D:\\v30\\adsStd\\w32lib\\SecurityBaseClass.lib")
 #ifdef _UNICODE
 

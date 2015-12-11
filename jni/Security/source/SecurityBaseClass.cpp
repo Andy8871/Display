@@ -2,7 +2,7 @@
 #include <memory.h>
 #include <stdio.h>
 #include "EncrypClass.h"
-#include "Rijndael.h"
+#include "RijndaelDataBase.h"
 #include "des.h"
 #include "CrcClass.h"
 #include <math.h>

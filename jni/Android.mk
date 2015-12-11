@@ -57,9 +57,9 @@ ALLFILES_CPP := $(call walk, $(LOCAL_PATH)/DiagnoseBase/source)
 FILE_LIST_CPP := $(filter %.cpp, $(ALLFILES_CPP))
 # Ìæ»»µôLOCAL_SRC_FILESÖÐµÄLOCAL_PATH
 LOCAL_SRC_FILES := $(FILE_LIST_CPP:$(LOCAL_PATH)/%=%)
-LOCAL_C_INCLUDES := $(LOCAL_PATH)/DiagnoseBase/include
-LOCAL_C_INCLUDES += $(LOCAL_PATH)/Security/include
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/LinkLayer/include
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/Security/include
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/DiagnoseBase/include
 LOCAL_LDLIBS := -llog
 LOCAL_LDLIBS += -landroid
 LOCAL_SHARED_LIBRARIES := security

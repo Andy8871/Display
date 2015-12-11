@@ -24,7 +24,7 @@
 #include "Database.h"
 #include "display.h"
 
-#include "SecurityBaseClass.h"
+#include "../../Security/include/SecurityBaseClass.h"
 #include "RunEnvironment.h"
 #include "Information.h"
 

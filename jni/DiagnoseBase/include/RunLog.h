@@ -10,7 +10,7 @@
 #endif // _MSC_VER > 1000
 //
 #include "Binary.h"
-#include "EncryptFile.h"
+#include "../../Security/include/EncryptFile.h"
 #ifdef WIN32
 #include "PtcAPI.h"
 #endif

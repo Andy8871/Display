@@ -5,7 +5,7 @@
 #include "Binary.h"
 #include "SendFrame.h"
 #include "ReceiveFrame.h"
-#include "BaseComm.h"
+#include "../../LinkLayer/include/BaseComm.h"
 #define HEAD_FLAG1  (0xAA)
 #define HEAD_FLAG2  (0x55)
 class CSendReceivePacket
