@@ -10,8 +10,8 @@
 #include "RunEnvironment.h"
 #include "Binary.h"
 
-extern CCommWithEcu* g_pCommEcu; //全局通信接口
-extern CDisplay * g_pDisplay; //全局显示接口
+//extern CCommWithEcu* g_pCommEcu; //全局通信接口
+/*CDisplay * g_pDisplay = CDisplay::GetInstance(); //全局显示接口*/
 extern float g_flLibVersion;
 
 #define VEHICLE_NAME	"OBDII"
@@ -33,16 +33,16 @@ int CDiagnosisFrame::InitInstance(JNIEnv* env)
 	CInformation::SetVehiclesSystemName(VEHICLE_NAME);
 	CInformation::SetVersion(DIAG_VERSION);
 
-	g_pDisplay = getDisplayObject();
-	g_pCommEcu = getCommWithEcuObject();
+	/*g_pDisplay = getDisplayObject();*/
+	//g_pCommEcu = getCommWithEcuObject();
 
 	g_flLibVersion = CInformation::GetVersion();
-	unsigned char nRet = g_pDisplay->Init(env);
+	unsigned char nRet = CDisplay::GetInstance()->Init(env);
 
 	if (nRet == 0x01)
 	{
 		short iRet = -1;
-		g_pCommEcu->Init();
+		CCommWithEcu::GetInstance()->Init();
 		try
 		{
 			__android_log_write(ANDROID_LOG_DEBUG, "CDiagnosisFrame",
@@ -56,8 +56,8 @@ int CDiagnosisFrame::InitInstance(JNIEnv* env)
 	}
 	else
 	{
-			g_pCommEcu->Destroy();
-			g_pDisplay->Destroy();
+		CCommWithEcu::GetInstance()->Destroy();
+		CDisplay::GetInstance()->Destroy();
 		return 1;
 	}
 // #endif	// #ifdef DATA_DRV_EXT
@@ -66,8 +66,8 @@ int CDiagnosisFrame::InitInstance(JNIEnv* env)
 	 if (Log != NULL)
 	 Log->Close();
 	 */
-	g_pCommEcu->Destroy();
-	g_pDisplay->Destroy();
+	CCommWithEcu::GetInstance()->Destroy();
+	CDisplay::GetInstance()->Destroy();
 	return 0;
 }
 

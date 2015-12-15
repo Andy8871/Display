@@ -35,7 +35,7 @@ CCommonTools *CommonTools=NULL;
 CBinaryGroup vecReceData;
 
 extern	CCommWithEcu*	g_pCommEcu;	    //全局通信接口
-extern	CDisplay *	g_pDisplay; 		//全局显示接口
+//extern	CDisplay *	g_pDisplay; 		//全局显示接口
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -336,7 +336,7 @@ short CBasicDiagnosticUnit::OBDIIDiagnose()
 	iNum=binECUIDs.GetSize();
 	if(!binECUIDs.GetSize())
 	{
-		g_pDisplay->MessageBox(CBinary("\x00\xFF\x00\x00\x00\x11",6),STRID_ERROR);
+		CDisplay::GetInstance()->MessageBox(CBinary("\x00\xFF\x00\x00\x00\x11",6),STRID_ERROR);
 	}
 
 	CommLayer->bCommStatus=Comm_Status_General;
@@ -359,7 +359,7 @@ short CBasicDiagnosticUnit::OBDIIDiagnose()
 		iSelect=CommonTools->MenuAddItemStr(adsGetTextString(CBinary("\x00\xFF\x04\x00\x00\x01",6)),vecSysStr);
 		if(iSelect<0)
 			break;
-		g_pDisplay->MessageBox(adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x10",6)),vecSysStr[iSelect],adsMB_NoButton);
+		CDisplay::GetInstance()->MessageBox(adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x10",6)),vecSysStr[iSelect],adsMB_NoButton);
 		CommLayer->OBDIIResetFilter(binECUIDs[iSelect]);
 		DataListFunc->GetDataListVecItem();
 		OBDIIFuncShow(vecSysStr[iSelect]);
@@ -367,7 +367,7 @@ short CBasicDiagnosticUnit::OBDIIDiagnose()
 
 	OBDIIExitSystem();
 	if(!Demo_Flag)
-		g_pCommEcu->KeepLink();
+		CCommWithEcu::GetInstance()->KeepLink();
 
 	return 1;
 }
@@ -416,7 +416,7 @@ short CBasicDiagnosticUnit::OBDIIFuncShow(string strTitle)
 			DataListFunc->GetDSGrpItems(vecDSItemID,iSelect);
 			if(!vecDSItemID.size())
 			{
-				g_pDisplay->MessageBox(adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x09",6)),strTitle);
+				CDisplay::GetInstance()->MessageBox(adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x09",6)),strTitle);
 				break;
 			}
 			DataListFunc->SystemInfoShow(vecItemStrID[iSelect],vecDSItemID);
@@ -425,7 +425,7 @@ short CBasicDiagnosticUnit::OBDIIFuncShow(string strTitle)
 			DataListFunc->GetDSGrpItems(vecDSItemID,iSelect);
 			if(!vecDSItemID.size())
 			{
-				g_pDisplay->MessageBox(adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x09",6)),strTitle);
+				CDisplay::GetInstance()->MessageBox(adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x09",6)),strTitle);
 				break;
 			}
 			OBDIIReadnissCode(vecItemStrID[iSelect],vecDSItemID);
@@ -438,14 +438,14 @@ short CBasicDiagnosticUnit::OBDIIFuncShow(string strTitle)
 			}
 			else
 			{
-				g_pDisplay->MessageBox(CBinary("\x00\xFF\x05\x00\x00\x11",6),vecDSItemID[iSelect]);
+				CDisplay::GetInstance()->MessageBox(CBinary("\x00\xFF\x05\x00\x00\x11",6),vecDSItemID[iSelect]);
 			}
 			break;
 		case 4:
 			DataListFunc->GetDSGrpItems(vecDSItemID,iSelect);
 			if(!vecDSItemID.size())
 			{
-				g_pDisplay->MessageBox(adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x09",6)),strTitle);
+				CDisplay::GetInstance()->MessageBox(adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x09",6)),strTitle);
 				break;
 			}
 			DataListFunc->DataListFlash(vecItemStrID[iSelect],vecDSItemID);
@@ -453,7 +453,7 @@ short CBasicDiagnosticUnit::OBDIIFuncShow(string strTitle)
 		case 5:
 			if((bCommBUS_ID==P_KWP2000_ON_CAN)||(bCommBUS_ID==P_ED_ON_CAN))
 			{
-				g_pDisplay->MessageBox(adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x09",6)),strTitle);
+				CDisplay::GetInstance()->MessageBox(adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x09",6)),strTitle);
 			}
 			else
 			{
@@ -464,13 +464,13 @@ short CBasicDiagnosticUnit::OBDIIFuncShow(string strTitle)
 			OBDIIOnBoardTest(vecFuncItemStr[iSelect]);
 			break;
 		case 7:
-			g_pDisplay->MessageBox(adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x09",6)),strTitle);
+			CDisplay::GetInstance()->MessageBox(adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x09",6)),strTitle);
 			break;
 		case 8:
 			DataListFunc->GetDSGrpItems(vecDSItemID,iSelect);
 			if(!vecDSItemID.size())
 			{
-				g_pDisplay->MessageBox(adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x09",6)),strTitle);
+				CDisplay::GetInstance()->MessageBox(adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x09",6)),strTitle);
 				break;
 			}
 			if((bCommBUS_ID==P_KWP2000_ON_CAN)||(bCommBUS_ID==P_ED_ON_CAN))
@@ -532,7 +532,7 @@ short CBasicDiagnosticUnit::OBDIIOnBoardTest(string strTitle)
 	DataListFunc->GetDSGrpItems(vecDSItemID,6);
 	if(!vecDSItemID.size())
 	{
-		g_pDisplay->MessageBox(adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x09",6)),strTitle);
+		CDisplay::GetInstance()->MessageBox(adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x09",6)),strTitle);
 		return 1;
 	}
 
@@ -588,7 +588,7 @@ short CBasicDiagnosticUnit::OBDIIOnBoardTestShow(string strTitle,CBinary binItem
 	unsigned short iValueMin=0;
 	unsigned short iValueMax=0;
 
-	g_pDisplay->MessageBox(STRID_COMMUNICATING,STRID_INFORMATION,adsMB_NoButton);
+	CDisplay::GetInstance()->MessageBox(STRID_COMMUNICATING,STRID_INFORMATION,adsMB_NoButton);
 
 	if(!CommonTools->ReadDBFile(vecItemInfo,"DATALIST.DB",binItemID))
 	{
@@ -598,8 +598,8 @@ short CBasicDiagnosticUnit::OBDIIOnBoardTestShow(string strTitle,CBinary binItem
 	iRet=CommLayer->SendReceive(binCmdID,vecReceData);
 	if(iRet!=Rece_Positive)
 	{
-		g_pDisplay->MessageBox(adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x09",6)),strTitle);
-		//g_pDisplay->MessageBox(STRID_COMMUNICATION_FAILED,STRID_ERROR);
+		CDisplay::GetInstance()->MessageBox(adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x09",6)),strTitle);
+		//CDisplay::GetInstance()->MessageBox(STRID_COMMUNICATION_FAILED,STRID_ERROR);
 		return 0;
 	}
 	binReceData=vecReceData[0];
@@ -607,7 +607,7 @@ short CBasicDiagnosticUnit::OBDIIOnBoardTestShow(string strTitle,CBinary binItem
 	iNum=(iLen-1)/9;
 	if(!iNum)
 	{
-		g_pDisplay->MessageBox(adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x09",6)),strTitle);
+		CDisplay::GetInstance()->MessageBox(adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x09",6)),strTitle);
 		return 0;
 	}
 	for(i=0;i<iNum;i++)
@@ -625,12 +625,12 @@ short CBasicDiagnosticUnit::OBDIIOnBoardTestShow(string strTitle,CBinary binItem
 			break;
 		while(1)
 		{
-			g_pDisplay->DataStream.Init(vecItemStr[iSelect]);
+			CDisplay::GetInstance()->DataStream.Init(vecItemStr[iSelect]);
 			bScalID=binReceData[3+iSelect*9];
 			strItemName=vecItemStr[iSelect];
 			strValue="";
 			strUnit="";
-			g_pDisplay->DataStream.Add(strItemName,strValue,strUnit);
+			CDisplay::GetInstance()->DataStream.Add(strItemName,strValue,strUnit);
 			if(!GetTestConvInfo(bScalID,vecItemInfo))
 				break;
 			strUnit=CommonTools->GetTxtString(vecItemInfo[2]);
@@ -649,7 +649,7 @@ short CBasicDiagnosticUnit::OBDIIOnBoardTestShow(string strTitle,CBinary binItem
 				iValueCur=binData[1]*256+binData[0];
 				DataListFunc->GetStringValue(0x00,binConvID,binData,strValue);
 			}
-			g_pDisplay->DataStream.Add(strItemName,strValue,strUnit);
+			CDisplay::GetInstance()->DataStream.Add(strItemName,strValue,strUnit);
 			strItemName=adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x0B",6));
 			vecReceData.clear();
 			binData=NULL;
@@ -662,7 +662,7 @@ short CBasicDiagnosticUnit::OBDIIOnBoardTestShow(string strTitle,CBinary binItem
 				iValueMin=binData[1]*256+binData[0];
 				DataListFunc->GetStringValue(0x00,binConvID,binData,strValue);
 			}
-			g_pDisplay->DataStream.Add(strItemName,strValue,strUnit);
+			CDisplay::GetInstance()->DataStream.Add(strItemName,strValue,strUnit);
 			strItemName=adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x0C",6));
 			vecReceData.clear();
 			binData=NULL;
@@ -675,15 +675,15 @@ short CBasicDiagnosticUnit::OBDIIOnBoardTestShow(string strTitle,CBinary binItem
 				iValueMax=binData[1]*256+binData[0];
 				DataListFunc->GetStringValue(0x00,binConvID,binData,strValue);
 			}
-			g_pDisplay->DataStream.Add(strItemName,strValue,strUnit);
+			CDisplay::GetInstance()->DataStream.Add(strItemName,strValue,strUnit);
 			strItemName=adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x0D",6));
 			if((iValueCur>=iValueMin)&&(iValueCur<=iValueMax))
 				strValue=adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x0E",6));
 			else
 				strValue=adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x0F",6));
 			strUnit="";
-			g_pDisplay->DataStream.Add(strItemName,strValue,strUnit);
-			if(g_pDisplay->DataStream.Show()==0x0b)
+			CDisplay::GetInstance()->DataStream.Add(strItemName,strValue,strUnit);
+			if(CDisplay::GetInstance()->DataStream.Show()==0x0b)
 			{
 				break;
 			}
@@ -715,7 +715,7 @@ short CBasicDiagnosticUnit::OBDIIOnBoardTestShow1(string strTitle,CBinary binIte
 	unsigned short iValueMax=0;
 	char strID[10];
 
-	g_pDisplay->MessageBox(STRID_COMMUNICATING,STRID_INFORMATION,adsMB_NoButton);
+	CDisplay::GetInstance()->MessageBox(STRID_COMMUNICATING,STRID_INFORMATION,adsMB_NoButton);
 
 	if(!CommonTools->ReadDBFile(vecItemInfo,"DATALIST.DB",binItemID))
 	{
@@ -725,15 +725,15 @@ short CBasicDiagnosticUnit::OBDIIOnBoardTestShow1(string strTitle,CBinary binIte
 	iRet=CommLayer->SendReceive(binCmdID,vecReceData);
 	if(iRet!=Rece_Positive)
 	{
-		g_pDisplay->MessageBox(adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x09",6)),strTitle);
-		//g_pDisplay->MessageBox(STRID_COMMUNICATION_FAILED,STRID_ERROR);
+		CDisplay::GetInstance()->MessageBox(adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x09",6)),strTitle);
+		//CDisplay::GetInstance()->MessageBox(STRID_COMMUNICATION_FAILED,STRID_ERROR);
 		return 0;
 	}
 	binReceData=vecReceData[0];
 	iLen=binReceData.GetSize();
 	if(iLen<7)
 	{
-		g_pDisplay->MessageBox(adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x09",6)),strTitle);
+		CDisplay::GetInstance()->MessageBox(adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x09",6)),strTitle);
 		return 0;
 	}
 	
@@ -747,9 +747,9 @@ short CBasicDiagnosticUnit::OBDIIOnBoardTestShow1(string strTitle,CBinary binIte
 
 	while(1)
 	{
-		g_pDisplay->DataStream.Init(strTitle);
+		CDisplay::GetInstance()->DataStream.Init(strTitle);
 		strItemName=adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x12",6))+strID;
-		g_pDisplay->DataStream.Add(strItemName,"","");
+		CDisplay::GetInstance()->DataStream.Add(strItemName,"","");
 
 
 		strItemName=adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x0A",6));
@@ -762,7 +762,7 @@ short CBasicDiagnosticUnit::OBDIIOnBoardTestShow1(string strTitle,CBinary binIte
 			iValueCur=binData[1]*256+binData[0];
 			DataListFunc->GetStringValue(0x00,binConvID,binData,strValue);
 		}
-		g_pDisplay->DataStream.Add(strItemName,strValue,strUnit);
+		CDisplay::GetInstance()->DataStream.Add(strItemName,strValue,strUnit);
 
 		strItemName=adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x0B",6));
 		vecReceData.clear();
@@ -779,7 +779,7 @@ short CBasicDiagnosticUnit::OBDIIOnBoardTestShow1(string strTitle,CBinary binIte
 				DataListFunc->GetStringValue(0x00,binConvID,binData,strValue);
 			}
 		}
-		g_pDisplay->DataStream.Add(strItemName,strValue,strUnit);
+		CDisplay::GetInstance()->DataStream.Add(strItemName,strValue,strUnit);
 
 		strItemName=adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x0C",6));
 		strValue="*****";
@@ -791,7 +791,7 @@ short CBasicDiagnosticUnit::OBDIIOnBoardTestShow1(string strTitle,CBinary binIte
 				DataListFunc->GetStringValue(0x00,binConvID,binData,strValue);
 			}
 		}
-		g_pDisplay->DataStream.Add(strItemName,strValue,strUnit);
+		CDisplay::GetInstance()->DataStream.Add(strItemName,strValue,strUnit);
 
 		strItemName=adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x0D",6));
 		if(bLimitType)
@@ -808,8 +808,8 @@ short CBasicDiagnosticUnit::OBDIIOnBoardTestShow1(string strTitle,CBinary binIte
 			else
 				strValue=adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x0F",6));
 		}
-		g_pDisplay->DataStream.Add(strItemName,strValue,"");
-		if(g_pDisplay->DataStream.Show()==0x0b)
+		CDisplay::GetInstance()->DataStream.Add(strItemName,strValue,"");
+		if(CDisplay::GetInstance()->DataStream.Show()==0x0b)
 		{
 			break;
 		}
@@ -890,7 +890,7 @@ short CBasicDiagnosticUnit::OBDIIO2MonitorTest(string strTitle)
 	DataListFunc->GetDSGrpItems(vecDSItemID,5);
 	if(!vecDSItemID.size())
 	{
-		g_pDisplay->MessageBox(adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x09",6)),strTitle);
+		CDisplay::GetInstance()->MessageBox(adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x09",6)),strTitle);
 		return 1;
 	}
 	
@@ -936,7 +936,7 @@ short CBasicDiagnosticUnit::OBDIIO2MonitorTestShow(string strTitle,unsigned char
 	CBinary binPID=NULL;
 	short iSelect=0;
 
-	g_pDisplay->MessageBox(STRID_COMMUNICATING,STRID_INFORMATION,adsMB_NoButton);
+	CDisplay::GetInstance()->MessageBox(STRID_COMMUNICATING,STRID_INFORMATION,adsMB_NoButton);
 
 	vecItemID.clear();
 	vecItemStr.clear();
@@ -1021,7 +1021,7 @@ short CBasicDiagnosticUnit::OBDIIO2MonitorTestShow(string strTitle,unsigned char
 	}
 	if(!vecItemID.size())
 	{
-		g_pDisplay->MessageBox(adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x09",6)),strTitle);
+		CDisplay::GetInstance()->MessageBox(adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x09",6)),strTitle);
 		return 0;
 	}
 	
@@ -1050,30 +1050,30 @@ short CBasicDiagnosticUnit::OBDIIO2MonitorTestShow(string strTitle,unsigned char
 		iRet=CommLayer->SendReceiveCmd(binCmdInfo,vecReceData);
 		if(iRet!=Rece_Positive)
 		{
-			g_pDisplay->MessageBox(adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x09",6)),strTitle);
+			CDisplay::GetInstance()->MessageBox(adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x09",6)),strTitle);
 			continue;
 		}
 		binReceCmd=vecReceData[0];
 		iLen=binReceCmd.GetSize();
 		if(iLen<4)
 		{
-			g_pDisplay->MessageBox(adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x09",6)),strTitle);
+			CDisplay::GetInstance()->MessageBox(adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x09",6)),strTitle);
 			continue;
 		}
 		binConvID=vecItemInfo[6];
 		strUnit=CommonTools->GetTxtString(vecItemInfo[2]);
 		while(1)
 		{
-			g_pDisplay->DataStream.Init(vecItemStr[iSelect]);
+			CDisplay::GetInstance()->DataStream.Init(vecItemStr[iSelect]);
 			strItemName=vecItemStr[iSelect];
-			g_pDisplay->DataStream.Add(strItemName,"","");
+			CDisplay::GetInstance()->DataStream.Add(strItemName,"","");
 
 			strItemName=adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x0A",6));
 			binData=NULL;
 			binData.Add(binReceCmd[3]);
 			iValueCur=binData[0];
 			DataListFunc->GetStringValue(0x00,binConvID,binData,strValue);
-			g_pDisplay->DataStream.Add(strItemName,strValue,strUnit);
+			CDisplay::GetInstance()->DataStream.Add(strItemName,strValue,strUnit);
 			
 			strItemName=adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x0B",6));
 			if(iLen<5)
@@ -1087,7 +1087,7 @@ short CBasicDiagnosticUnit::OBDIIO2MonitorTestShow(string strTitle,unsigned char
 				iValueMin=binData[0];
 				DataListFunc->GetStringValue(0x00,binConvID,binData,strValue);
 			}
-			g_pDisplay->DataStream.Add(strItemName,strValue,strUnit);
+			CDisplay::GetInstance()->DataStream.Add(strItemName,strValue,strUnit);
 			
 			strItemName=adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x0C",6));
 			if(iLen<6)
@@ -1101,7 +1101,7 @@ short CBasicDiagnosticUnit::OBDIIO2MonitorTestShow(string strTitle,unsigned char
 				iValueMax=binData[0];
 				DataListFunc->GetStringValue(0x00,binConvID,binData,strValue);
 			}
-			g_pDisplay->DataStream.Add(strItemName,strValue,strUnit);
+			CDisplay::GetInstance()->DataStream.Add(strItemName,strValue,strUnit);
 
 			strItemName=adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x0D",6));
 			if(iLen<6)
@@ -1115,9 +1115,9 @@ short CBasicDiagnosticUnit::OBDIIO2MonitorTestShow(string strTitle,unsigned char
 				else
 					strValue=adsGetTextString(CBinary("\x00\xFF\x05\x00\x00\x0F",6));
 			}
-			g_pDisplay->DataStream.Add(strItemName,strValue,"");
+			CDisplay::GetInstance()->DataStream.Add(strItemName,strValue,"");
 
-			if(g_pDisplay->DataStream.Show()==0x0b)
+			if(CDisplay::GetInstance()->DataStream.Show()==0x0b)
 			{
 				break;
 			}
@@ -1146,10 +1146,10 @@ short CBasicDiagnosticUnit::OBDIISysInfo_NoCAN(string strTitle,CBinaryGroup vecI
 	short iNum=0;
 	char strIndex[10];
 
-	g_pDisplay->MessageBox(STRID_COMMUNICATING,STRID_INFORMATION,adsMB_NoButton);
+	CDisplay::GetInstance()->MessageBox(STRID_COMMUNICATING,STRID_INFORMATION,adsMB_NoButton);
 	
 	CommLayer->InitHisData();
-	g_pDisplay->VehicleInfo.Init(strTitle);
+	CDisplay::GetInstance()->VehicleInfo.Init(strTitle);
 	for(i=0;i<vecItemID.size();i++)
 	{
 		binItemID=vecItemID[i];
@@ -1190,7 +1190,7 @@ short CBasicDiagnosticUnit::OBDIISysInfo_NoCAN(string strTitle,CBinaryGroup vecI
 			{
 				DataListFunc->GetStringValue(vecItemInfo[11][0],vecItemInfo[6],binData,strValue);
 			}
-			g_pDisplay->VehicleInfo.Add(strItemName,strValue);
+			CDisplay::GetInstance()->VehicleInfo.Add(strItemName,strValue);
 			break;
 		case 0x04:
 			iNum=vecReceData.size()/4;
@@ -1212,7 +1212,7 @@ short CBasicDiagnosticUnit::OBDIISysInfo_NoCAN(string strTitle,CBinaryGroup vecI
 					strItemName=CommonTools->GetTxtString(vecItemInfo[1]);
 					strItemName+=strIndex;
 				}
-				g_pDisplay->VehicleInfo.Add(strItemName,strValue);
+				CDisplay::GetInstance()->VehicleInfo.Add(strItemName,strValue);
 			}
 			break;
 		case 0x06:
@@ -1232,7 +1232,7 @@ short CBasicDiagnosticUnit::OBDIISysInfo_NoCAN(string strTitle,CBinaryGroup vecI
 					strItemName=CommonTools->GetTxtString(vecItemInfo[1]);
 					strItemName+=strIndex;
 				}
-				g_pDisplay->VehicleInfo.Add(strItemName,strValue);
+				CDisplay::GetInstance()->VehicleInfo.Add(strItemName,strValue);
 			}
 			break;
 		case 0x08:
@@ -1240,14 +1240,14 @@ short CBasicDiagnosticUnit::OBDIISysInfo_NoCAN(string strTitle,CBinaryGroup vecI
 			if(CommonTools->GetCtrlData(vecReceDataTemp,vecItemInfo[7],vecItemInfo[8],binData))
 			{
 				DataListFunc->GetStringValue(vecItemInfo[11][0],vecItemInfo[6],binData,strValue);
-				g_pDisplay->VehicleInfo.Add(strItemName,strValue);
+				CDisplay::GetInstance()->VehicleInfo.Add(strItemName,strValue);
 			}
 			break;
 		default:
 			break;
 		}
 	}
-	g_pDisplay->VehicleInfo.Show();
+	CDisplay::GetInstance()->VehicleInfo.Show();
 
 	return 1;
 }
@@ -1271,10 +1271,10 @@ short CBasicDiagnosticUnit::OBDIISysInfo_CAN(string strTitle,CBinaryGroup vecIte
 	short iNum=0;
 	char strIndex[10];
 
-	g_pDisplay->MessageBox(STRID_COMMUNICATING,STRID_INFORMATION,adsMB_NoButton);
+	CDisplay::GetInstance()->MessageBox(STRID_COMMUNICATING,STRID_INFORMATION,adsMB_NoButton);
 	
 	CommLayer->InitHisData();
-	g_pDisplay->VehicleInfo.Init(strTitle);
+	CDisplay::GetInstance()->VehicleInfo.Init(strTitle);
 	for(i=0;i<vecItemID.size();i++)
 	{
 		binItemID=vecItemID[i];
@@ -1299,7 +1299,7 @@ short CBasicDiagnosticUnit::OBDIISysInfo_CAN(string strTitle,CBinaryGroup vecIte
 			{
 				DataListFunc->GetStringValue(vecItemInfo[11][0],vecItemInfo[6],binData,strValue);
 			}
-			g_pDisplay->VehicleInfo.Add(strItemName,strValue);
+			CDisplay::GetInstance()->VehicleInfo.Add(strItemName,strValue);
 			break;
 		case 0x04:
 			binReceData=vecReceData[0];
@@ -1327,7 +1327,7 @@ short CBasicDiagnosticUnit::OBDIISysInfo_CAN(string strTitle,CBinaryGroup vecIte
 					strItemName=CommonTools->GetTxtString(vecItemInfo[1]);
 					strItemName+=strIndex;
 				}
-				g_pDisplay->VehicleInfo.Add(strItemName,strValue);
+				CDisplay::GetInstance()->VehicleInfo.Add(strItemName,strValue);
 			}
 			break;
 		case 0x06:
@@ -1356,7 +1356,7 @@ short CBasicDiagnosticUnit::OBDIISysInfo_CAN(string strTitle,CBinaryGroup vecIte
 					strItemName=CommonTools->GetTxtString(vecItemInfo[1]);
 					strItemName+=strIndex;
 				}
-				g_pDisplay->VehicleInfo.Add(strItemName,strValue);
+				CDisplay::GetInstance()->VehicleInfo.Add(strItemName,strValue);
 			}
 			break;
 		case 0x08:
@@ -1364,14 +1364,14 @@ short CBasicDiagnosticUnit::OBDIISysInfo_CAN(string strTitle,CBinaryGroup vecIte
 			if(CommonTools->GetCtrlData(vecReceData,vecItemInfo[7],vecItemInfo[8],binData))
 			{
 				DataListFunc->GetStringValue(vecItemInfo[11][0],vecItemInfo[6],binData,strValue);
-				g_pDisplay->VehicleInfo.Add(strItemName,strValue);
+				CDisplay::GetInstance()->VehicleInfo.Add(strItemName,strValue);
 			}
 			break;
 		default:
 			break;
 		}
 	}
-	g_pDisplay->VehicleInfo.Show();
+	CDisplay::GetInstance()->VehicleInfo.Show();
 
 	return 1;
 }

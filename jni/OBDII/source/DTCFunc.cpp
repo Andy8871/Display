@@ -127,31 +127,31 @@ short CDTCFunc::ReadDTCFunc(CBinary binTitle)
 
 	if(Demo_Flag==true)
 	{
-		g_pDisplay->MessageBox(STRID_NOFAULTCODEPRESENT,STRID_INFORMATION);
+		CDisplay::GetInstance()->MessageBox(STRID_NOFAULTCODEPRESENT,STRID_INFORMATION);
 		return 1;
 	}
 
-	g_pDisplay->MessageBox(STRID_READINGFAULTCODE,STRID_INFORMATION,adsMB_NoButton);
+	CDisplay::GetInstance()->MessageBox(STRID_READINGFAULTCODE,STRID_INFORMATION,adsMB_NoButton);
 	Flag_Success=false;
 	iDTCNum=ReadDTCCode();
 	if(Flag_Success==false)
 	{
-		g_pDisplay->MessageBox(STRID_READFAULTCODE_FAILED,STRID_INFORMATION);
+		CDisplay::GetInstance()->MessageBox(STRID_READFAULTCODE_FAILED,STRID_INFORMATION);
 		return 0;
 	}
 	iDTCNum=GetVecDTCStr(vecStrCode,vecStrDes,vecStrStatus);
 	if(!iDTCNum)
 	{
-		g_pDisplay->MessageBox(STRID_NOFAULTCODEPRESENT,STRID_INFORMATION);
+		CDisplay::GetInstance()->MessageBox(STRID_NOFAULTCODEPRESENT,STRID_INFORMATION);
 		return 0;
 	}
-	g_pDisplay->TroubleCode.SetTroubleCodeCallBackFunction(NULL);
-	g_pDisplay->TroubleCode.Init(binTitle);
+	CDisplay::GetInstance()->TroubleCode.SetTroubleCodeCallBackFunction(NULL);
+	CDisplay::GetInstance()->TroubleCode.Init(binTitle);
 	for(i=0;i<iDTCNum;i++)
 	{
-		g_pDisplay->TroubleCode.Add(vecStrCode[i],vecStrDes[i],vecStrStatus[i]);
+		CDisplay::GetInstance()->TroubleCode.Add(vecStrCode[i],vecStrDes[i],vecStrStatus[i]);
 	}
-	g_pDisplay->TroubleCode.Show();
+	CDisplay::GetInstance()->TroubleCode.Show();
 
 	return 1;
 }
@@ -558,7 +558,7 @@ short CDTCFunc::ShowOBDIIBrands(CBinary &binECUID)
 	if(!vecECUIDs.size())
 		return 0;
 
-	g_pDisplay->MessageBox(CBinary("\x00\xFF\x05\x00\x00\x14",6),CBinary("\x00\xFF\x01\x00\x00\x03",6));
+	CDisplay::GetInstance()->MessageBox(CBinary("\x00\xFF\x05\x00\x00\x14",6),CBinary("\x00\xFF\x01\x00\x00\x03",6));
 
 	while(1)
 	{
@@ -633,26 +633,26 @@ short CDTCFunc::ClearDTCFunc(CBinary binTitle)
 	short ButtonID=0;
 	short iDTCNum=0;
 	
-	ButtonID=g_pDisplay->MessageBox(CBinary("\x00\xFF\x05\x00\x00\x13",6),STRID_INFORMATION,adsMB_YesNo);//Do you want to erase all the fault code(s)?
+	ButtonID=CDisplay::GetInstance()->MessageBox(CBinary("\x00\xFF\x05\x00\x00\x13",6),STRID_INFORMATION,adsMB_YesNo);//Do you want to erase all the fault code(s)?
 	if(ButtonID==adsIDNO)
 	{
 		return 1;
 	}
-	g_pDisplay->MessageBox(STRID_CLEARINGFAULTCODE,STRID_INFORMATION,adsMB_NoButton);//Erasing fault code(s)...
+	CDisplay::GetInstance()->MessageBox(STRID_CLEARINGFAULTCODE,STRID_INFORMATION,adsMB_NoButton);//Erasing fault code(s)...
 	
 	if(Demo_Flag==true)
 	{
-		g_pDisplay->MessageBox(STRID_CLEARFAULTCODE_OK,STRID_INFORMATION);
+		CDisplay::GetInstance()->MessageBox(STRID_CLEARFAULTCODE_OK,STRID_INFORMATION);
 		return 1;
 	}
 
 	if(ClearDTCCode())
 	{
-		g_pDisplay->MessageBox(STRID_CLEARFAULTCODE_OK,STRID_INFORMATION);
+		CDisplay::GetInstance()->MessageBox(STRID_CLEARFAULTCODE_OK,STRID_INFORMATION);
 	}
 	else
 	{
-		g_pDisplay->MessageBox(STRID_CLEARFAULTCODE_FAILED,STRID_ERROR);
+		CDisplay::GetInstance()->MessageBox(STRID_CLEARFAULTCODE_FAILED,STRID_ERROR);
 	}
 
 	return 1;

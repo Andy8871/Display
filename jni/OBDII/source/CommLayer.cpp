@@ -77,7 +77,7 @@ short CCommLayer::InitLinkLayer()
 	if(Num<31)
 		return 0;
 
-	g_pCommEcu->InitAndResetCOMM();
+	CCommWithEcu::GetInstance()->InitAndResetCOMM();
 	
 	//设置协议类型
 	if(!SetProtocolID())
@@ -122,43 +122,43 @@ short CCommLayer::SetProtocolID()
 	{
 	case P_KWP2000_ON_K_LINE:
 	case P_ED_ISO_14230_K_LINE:
-		g_pCommEcu->ProtocolSet(PROTOCOL_KWP,&FilterCond);
-		g_pCommEcu->SetNegativeHandleMethod(0,0x7f,2,0x78,1,500);
+		CCommWithEcu::GetInstance()->ProtocolSet(PROTOCOL_KWP,&FilterCond);
+		CCommWithEcu::GetInstance()->SetNegativeHandleMethod(0,0x7f,2,0x78,1,500);
 		iPosReceTimeOut=500;
 		iNegReceTimeOut=5000;
 		break;
 	case P_KWP2000_ON_CAN:
 	case P_UDS_ON_CAN:
 		SetCanIDFilter(FilterCond,2);
-		g_pCommEcu->ProtocolSet(PROTOCOL_CANBUS,&FilterCond);
-		g_pCommEcu->SetNegativeHandleMethod(4,0x7f,6,0x78,1,150);
+		CCommWithEcu::GetInstance()->ProtocolSet(PROTOCOL_CANBUS,&FilterCond);
+		CCommWithEcu::GetInstance()->SetNegativeHandleMethod(4,0x7f,6,0x78,1,150);
 		iPosReceTimeOut=500;
 		iNegReceTimeOut=5000;
 		break;
 	case P_ED_ON_CAN:
 		SetCanIDFilter(FilterCond,4);
-		g_pCommEcu->ProtocolSet(PROTOCOL_CANBUS,&FilterCond);
-		g_pCommEcu->SetNegativeHandleMethod(5,0x7f,7,0x78,1,150);
+		CCommWithEcu::GetInstance()->ProtocolSet(PROTOCOL_CANBUS,&FilterCond);
+		CCommWithEcu::GetInstance()->SetNegativeHandleMethod(5,0x7f,7,0x78,1,150);
 		iPosReceTimeOut=500;
 		iNegReceTimeOut=5000;
 		break;
 	case P_ED_ISO_9141_K_LINE:
-		g_pCommEcu->ProtocolSet(PROTOCOL_ISO,&FilterCond);
-		g_pCommEcu->SetNegativeHandleMethod(3,0x7f,5,0x78,1,150);
+		CCommWithEcu::GetInstance()->ProtocolSet(PROTOCOL_ISO,&FilterCond);
+		CCommWithEcu::GetInstance()->SetNegativeHandleMethod(3,0x7f,5,0x78,1,150);
 		break;
 	case P_UDS_ON_K_LINE:
-		g_pCommEcu->ProtocolSet(PROTOCOL_NORMAL,&FilterCond);
-		g_pCommEcu->SetNegativeHandleMethod(3,0x7f,5,0x78,1,150);
+		CCommWithEcu::GetInstance()->ProtocolSet(PROTOCOL_NORMAL,&FilterCond);
+		CCommWithEcu::GetInstance()->SetNegativeHandleMethod(3,0x7f,5,0x78,1,150);
 		iPosReceTimeOut=500;
 		iNegReceTimeOut=5000;
 		break;
 	case P_ED_VPW:
-		g_pCommEcu->ProtocolSet(PROTOCOL_VPW,&FilterCond);
-		g_pCommEcu->SetNegativeHandleMethod(3,0x7f,5,0x78,1,150);
+		CCommWithEcu::GetInstance()->ProtocolSet(PROTOCOL_VPW,&FilterCond);
+		CCommWithEcu::GetInstance()->SetNegativeHandleMethod(3,0x7f,5,0x78,1,150);
 		break;
 	case P_ED_PWM:
-		g_pCommEcu->ProtocolSet(PROTOCOL_PWM,&FilterCond);
-		g_pCommEcu->SetNegativeHandleMethod(3,0x7f,5,0x78,1,150);
+		CCommWithEcu::GetInstance()->ProtocolSet(PROTOCOL_PWM,&FilterCond);
+		CCommWithEcu::GetInstance()->SetNegativeHandleMethod(3,0x7f,5,0x78,1,150);
 		break;
 	default:
 		break;
@@ -269,7 +269,7 @@ short CCommLayer::SetTimeParameter()
 		return 0;
 	MaxCommTime=CommonTools->StrBinToUINT32(CBTemp);
 	
-	g_pCommEcu->WaitCommPacketMaxTime(MaxCommTime);
+	CCommWithEcu::GetInstance()->WaitCommPacketMaxTime(MaxCommTime);
 	
 	CBTemp=Link_Info[Pos_ReceTimeOut];
 	if(CommonTools->IsCBinaryAvailable(CBTemp))
@@ -294,7 +294,7 @@ short CCommLayer::SetTimeParameter()
 		SendIntervalTime=CommonTools->StrBinToUINT32(CBTemp);
 	}
 	
-	g_pCommEcu->TimeIntervalOver(ReceTimeOut,SendWaitMinTime,SendIntervalTime,iNegReceTimeOut);
+	CCommWithEcu::GetInstance()->TimeIntervalOver(ReceTimeOut,SendWaitMinTime,SendIntervalTime,iNegReceTimeOut);
 	
 	return 1;
 }
@@ -326,7 +326,7 @@ short CCommLayer::SetBaudrate()
 		DataBit=CommonTools->StrBinToBYTE(CBTemp);
 	}
 	
-	g_pCommEcu->SetBps(Baudrate,ParityBit,DataBit);
+	CCommWithEcu::GetInstance()->SetBps(Baudrate,ParityBit,DataBit);
 	
 	return 1;
 }
@@ -431,7 +431,7 @@ short CCommLayer::SetIOPort()
 		}
 	}
 		
-	g_pCommEcu->SetIoPort(Send_Pin,Rece_Pin,VoltageValue,Send_Logic | Rece_Logic);
+	CCommWithEcu::GetInstance()->SetIoPort(Send_Pin,Rece_Pin,VoltageValue,Send_Logic | Rece_Logic);
 	
 	//获得控制线的引脚信息
 	CBTemp=Link_Info[Pos_Control_Pin];
@@ -440,7 +440,7 @@ short CCommLayer::SetIOPort()
 		Control_Pin=CommonTools->StrBinToBYTE(CBTemp);
 		if(Control_Pin==0x0F)
 			Control_Pin=0x05;
-		g_pCommEcu->EnableOutputIoLine(Control_Pin);
+		CCommWithEcu::GetInstance()->EnableOutputIoLine(Control_Pin);
 	}
 
 	return 1;
@@ -492,7 +492,7 @@ short CCommLayer::SetFlowControl()
 	sf.Clear();
 	sf+=OneSendFrm;
 	///////////////////
-	g_pCommEcu->SetAutoSendContinuedFrame(FilterCond,sf);
+	CCommWithEcu::GetInstance()->SetAutoSendContinuedFrame(FilterCond,sf);
 	
 	return 1;
 }
@@ -534,10 +534,10 @@ short CCommLayer::SendEnterSysCmd()
 			{
 				arrTemp[i] = vecIntParameter[i];
 			}
-			g_pCommEcu->Begin();
-			g_pCommEcu->VoltageHighLowTime(nParamLen,arrTemp);
-			g_pCommEcu->SendReceive(SendFrame); 
-			ReceFrame = g_pCommEcu->End();
+			CCommWithEcu::GetInstance()->Begin();
+			CCommWithEcu::GetInstance()->VoltageHighLowTime(nParamLen,arrTemp);
+			CCommWithEcu::GetInstance()->SendReceive(SendFrame); 
+			ReceFrame = CCommWithEcu::GetInstance()->End();
 			if (arrTemp != NULL)
 			{
 				delete []arrTemp;
@@ -555,7 +555,7 @@ short CCommLayer::SendEnterSysCmd()
 					bType=binAdrrType[2];
 				if(binAdrrType.GetSize()>3)
 					iWaitTime=binAdrrType[3];
-				g_pCommEcu->Begin();
+				CCommWithEcu::GetInstance()->Begin();
 				switch(bType)
 				{
 				case 1:
@@ -571,22 +571,22 @@ short CCommLayer::SendEnterSysCmd()
 				default:
 					break;
 				}
-				g_pCommEcu->VoltageHighLowTime(1,500);
-				g_pCommEcu->AddressCodeEnter(bAddress,iParameter,fBPS,iWaitTime);
-				ReceFrame = g_pCommEcu->End();
+				CCommWithEcu::GetInstance()->VoltageHighLowTime(1,500);
+				CCommWithEcu::GetInstance()->AddressCodeEnter(bAddress,iParameter,fBPS,iWaitTime);
+				ReceFrame = CCommWithEcu::GetInstance()->End();
 				if(!ReceFrame.size())
 					return Rece_Error;
 			}
-			ReceFrame=g_pCommEcu->SendReceive(SendFrame);
+			ReceFrame=CCommWithEcu::GetInstance()->SendReceive(SendFrame);
 			break;
 		default:
-			ReceFrame=g_pCommEcu->SendReceive(SendFrame);
+			ReceFrame=CCommWithEcu::GetInstance()->SendReceive(SendFrame);
 			break;
 		}
 	}
 	else
 	{
-		ReceFrame=g_pCommEcu->SendReceive(SendFrame);
+		ReceFrame=CCommWithEcu::GetInstance()->SendReceive(SendFrame);
 	}
 
 	
@@ -1325,7 +1325,7 @@ short CCommLayer::SendCommand(CSendFrame SendFrame,CBinaryGroup &vecReceFrm)
 	short iRetryTime=0;
 	short iTryMaxTime=100;
 
-	ReceFrame=g_pCommEcu->SendReceive(SendFrame);
+	ReceFrame=CCommWithEcu::GetInstance()->SendReceive(SendFrame);
 	
 	while(Rece_Flag)
 	{
@@ -1349,7 +1349,7 @@ short CCommLayer::SendCommand(CSendFrame SendFrame,CBinaryGroup &vecReceFrm)
 				Rece_Flag=false;
 				break;
 			}
-			ReceFrame=g_pCommEcu->SendReceive(SendFrame);
+			ReceFrame=CCommWithEcu::GetInstance()->SendReceive(SendFrame);
 			if(!ReceFrame.size())
 			{
 				iRece_Result=Rece_Negative;
@@ -1366,7 +1366,7 @@ short CCommLayer::SendCommand(CSendFrame SendFrame,CBinaryGroup &vecReceFrm)
 			}
 			if(SendEnterSysCmd()==Rece_Positive)
 			{
-				ReceFrame=g_pCommEcu->SendReceive(SendFrame);
+				ReceFrame=CCommWithEcu::GetInstance()->SendReceive(SendFrame);
 			}
 			iRetryTime++;
 			break;
@@ -1788,14 +1788,14 @@ short CCommLayer::OpenIdle()
 		return 1;
 	iIdleKeepTime=CommonTools->StrBinToINT16(CBTemp);
 	
-	g_pCommEcu->KeepLink(iIdleKeepTime,&IdleCmd);
+	CCommWithEcu::GetInstance()->KeepLink(iIdleKeepTime,&IdleCmd);
 	
 	return 1;
 }
 
 short CCommLayer::CloseIdle()
 {
-	g_pCommEcu->KeepLink();
+	CCommWithEcu::GetInstance()->KeepLink();
 	
 	return 1;
 }
@@ -1901,7 +1901,7 @@ short CCommLayer::OBDIICommSet_15765(CBinary &binECUIDs)
 	unsigned char bECUID=0x00;
 	CBinary binBPS=NULL;
 
-	g_pDisplay->MessageBox(CBinary("\x00\xFF\x05\x00\x00\x05",6),CBinary("\x00\xFF\x00\x00\x00\x09",6),adsMB_NoButton);
+	CDisplay::GetInstance()->MessageBox(CBinary("\x00\xFF\x05\x00\x00\x05",6),CBinary("\x00\xFF\x00\x00\x00\x09",6),adsMB_NoButton);
 
 	if(Demo_Flag==true)
 	{
@@ -1940,7 +1940,7 @@ short CCommLayer::OBDIICommSet_15765(CBinary &binECUIDs)
 	sendFrm=binCmd;
 	for(i=0;i<2;i++)
 	{
-		receFrm=g_pCommEcu->SendReceive(sendFrm);
+		receFrm=CCommWithEcu::GetInstance()->SendReceive(sendFrm);
 		if(receFrm.size())
 		{
 			for(j=0;j<receFrm[0].size();j++)
@@ -1967,10 +1967,10 @@ short CCommLayer::OBDIICommSet_15765(CBinary &binECUIDs)
 
 	CommonTools->StringToCBinary("250000",binBPS);
 	Link_Info[Pos_Baudrate]=binBPS;
-	g_pCommEcu->SetBps(250000);
+	CCommWithEcu::GetInstance()->SetBps(250000);
 	for(i=0;i<2;i++)
 	{
-		receFrm=g_pCommEcu->SendReceive(sendFrm);
+		receFrm=CCommWithEcu::GetInstance()->SendReceive(sendFrm);
 		if(receFrm.size())
 		{
 			for(j=0;j<receFrm[0].size();j++)
@@ -2013,7 +2013,7 @@ short CCommLayer::OBDIICommSet_15765(CBinary &binECUIDs)
 	sendFrm=binCmd;
 	for(i=0;i<2;i++)
 	{
-		receFrm=g_pCommEcu->SendReceive(sendFrm);
+		receFrm=CCommWithEcu::GetInstance()->SendReceive(sendFrm);
 		if(receFrm.size())
 		{
 			for(j=0;j<receFrm[0].size();j++)
@@ -2039,10 +2039,10 @@ short CCommLayer::OBDIICommSet_15765(CBinary &binECUIDs)
 	}
 	CommonTools->StringToCBinary("250000",binBPS);
 	Link_Info[Pos_Baudrate]=binBPS;
-	g_pCommEcu->SetBps(250000);
+	CCommWithEcu::GetInstance()->SetBps(250000);
 	for(i=0;i<2;i++)
 	{
-		receFrm=g_pCommEcu->SendReceive(sendFrm);
+		receFrm=CCommWithEcu::GetInstance()->SendReceive(sendFrm);
 		if(receFrm.size())
 		{
 			for(j=0;j<receFrm[0].size();j++)
@@ -2078,7 +2078,7 @@ short CCommLayer::OBDIICommSet_KLine(CBinary &binECUIDs)
 	short i=0,j=0;
 	unsigned char bECUID=0x00;
 
-	g_pDisplay->MessageBox(CBinary("\x00\xFF\x05\x00\x00\x04",6),CBinary("\x00\xFF\x00\x00\x00\x09",6),adsMB_NoButton);
+	CDisplay::GetInstance()->MessageBox(CBinary("\x00\xFF\x05\x00\x00\x04",6),CBinary("\x00\xFF\x00\x00\x00\x09",6),adsMB_NoButton);
 
 	
 	bCurBUS_ID=P_ED_ISO_9141_K_LINE;
@@ -2101,7 +2101,7 @@ short CCommLayer::OBDIICommSet_KLine(CBinary &binECUIDs)
 
 	if(!binECUIDs.GetSize())
 	{
-		receFrm=g_pCommEcu->AddressCodeEnter(0x33);
+		receFrm=CCommWithEcu::GetInstance()->AddressCodeEnter(0x33);
 		if(receFrm.size()>0)
 		{
 			binReceData=receFrm.GetFirstAnswerFrame();
@@ -2120,7 +2120,7 @@ short CCommLayer::OBDIICommSet_KLine(CBinary &binECUIDs)
 				case 0x6B8F:
 				case 0x6D8F:
 				case 0xEF8F:
-					g_pDisplay->MessageBox(CBinary("\x00\xFF\x05\x00\x00\x03",6),CBinary("\x00\xFF\x00\x00\x00\x09",6),adsMB_NoButton);
+					CDisplay::GetInstance()->MessageBox(CBinary("\x00\xFF\x05\x00\x00\x03",6),CBinary("\x00\xFF\x00\x00\x00\x09",6),adsMB_NoButton);
 					bCurBUS_ID=P_KWP2000_ON_K_LINE;
 					binCmd=CBinary("\xC2\x33\xF1\x01\x00\xE7",6);
 					sendFrm.SetDefaultReceiveFrameNumber(0xFF);
@@ -2135,7 +2135,7 @@ short CCommLayer::OBDIICommSet_KLine(CBinary &binECUIDs)
 			{
 				for(i=0;i<2;i++)
 				{
-					receFrm=g_pCommEcu->SendReceive(sendFrm);
+					receFrm=CCommWithEcu::GetInstance()->SendReceive(sendFrm);
 					if(receFrm.size())
 					{
 						for(j=0;j<receFrm[0].size();j++)
@@ -2160,7 +2160,7 @@ short CCommLayer::OBDIICommSet_KLine(CBinary &binECUIDs)
 
 	if(!binECUIDs.GetSize())
 	{
-		g_pDisplay->MessageBox(CBinary("\x00\xFF\x05\x00\x00\x03",6),CBinary("\x00\xFF\x00\x00\x00\x09",6),adsMB_NoButton);
+		CDisplay::GetInstance()->MessageBox(CBinary("\x00\xFF\x05\x00\x00\x03",6),CBinary("\x00\xFF\x00\x00\x00\x09",6),adsMB_NoButton);
 		
 		bCurBUS_ID=P_KWP2000_ON_K_LINE;
 		binCmd=CBinary("\xC1\x33\xF1\x81\x66",5);
@@ -2168,10 +2168,10 @@ short CCommLayer::OBDIICommSet_KLine(CBinary &binECUIDs)
 		sendFrm=binCmd;
 		for(i=0;i<2;i++)
 		{
-			g_pCommEcu->Begin();
-			g_pCommEcu->VoltageHighLowTime(3,300,25,25);	//拉高300ms,拉低25ms,再拉低25ms
-			g_pCommEcu->SendReceive(sendFrm);
-			receFrm=g_pCommEcu->End();
+			CCommWithEcu::GetInstance()->Begin();
+			CCommWithEcu::GetInstance()->VoltageHighLowTime(3,300,25,25);	//拉高300ms,拉低25ms,再拉低25ms
+			CCommWithEcu::GetInstance()->SendReceive(sendFrm);
+			receFrm=CCommWithEcu::GetInstance()->End();
 			if(receFrm.size())
 			{
 				for(j=0;j<receFrm[0].size();j++)
@@ -2200,7 +2200,7 @@ short CCommLayer::OBDIICommSet_KLine(CBinary &binECUIDs)
 
 	if(!iRet)
 	{
-		g_pCommEcu->KeepLink();
+		CCommWithEcu::GetInstance()->KeepLink();
 	}
 	return iRet;
 }
@@ -2216,7 +2216,7 @@ short CCommLayer::OBDIICommSet_KLine(CBinary &binECUIDs)
 	short i=0,j=0;
 	unsigned char bECUID=0x00;
 
-//	g_pDisplay->MessageBox(CBinary("\x00\xFF\x05\x00\x00\x04",6),CBinary("\x00\xFF\x00\x00\x00\x09",6),adsMB_NoButton);
+//	CDisplay::GetInstance()->MessageBox(CBinary("\x00\xFF\x05\x00\x00\x04",6),CBinary("\x00\xFF\x00\x00\x00\x09",6),adsMB_NoButton);
 	
 	binECUIDs=NULL;
 	
@@ -2239,7 +2239,7 @@ short CCommLayer::OBDIICommSet_KLine(CBinary &binECUIDs)
 
 	if(!binECUIDs.GetSize())
 	{
-		g_pDisplay->MessageBox(CBinary("\x00\xFF\x05\x00\x00\x03",6),CBinary("\x00\xFF\x00\x00\x00\x09",6),adsMB_NoButton);
+		CDisplay::GetInstance()->MessageBox(CBinary("\x00\xFF\x05\x00\x00\x03",6),CBinary("\x00\xFF\x00\x00\x00\x09",6),adsMB_NoButton);
 		
 		bCurBUS_ID=P_KWP2000_ON_K_LINE;
 		binCmd=CBinary("\xC1\x33\xF1\x81\x66",5);
@@ -2247,10 +2247,10 @@ short CCommLayer::OBDIICommSet_KLine(CBinary &binECUIDs)
 		sendFrm=binCmd;
 		for(i=0;i<2;i++)
 		{
-			g_pCommEcu->Begin();
-			g_pCommEcu->VoltageHighLowTime(3,300,25,25);	//拉高300ms,拉低25ms,再拉低25ms
-			g_pCommEcu->SendReceive(sendFrm);
-			receFrm=g_pCommEcu->End();
+			CCommWithEcu::GetInstance()->Begin();
+			CCommWithEcu::GetInstance()->VoltageHighLowTime(3,300,25,25);	//拉高300ms,拉低25ms,再拉低25ms
+			CCommWithEcu::GetInstance()->SendReceive(sendFrm);
+			receFrm=CCommWithEcu::GetInstance()->End();
 			if(receFrm.size())
 			{
 				for(j=0;j<receFrm[0].size();j++)
@@ -2276,8 +2276,8 @@ short CCommLayer::OBDIICommSet_KLine(CBinary &binECUIDs)
 
 	if(!binECUIDs.GetSize())
 	{
-		g_pDisplay->MessageBox(CBinary("\x00\xFF\x05\x00\x00\x04",6),CBinary("\x00\xFF\x00\x00\x00\x09",6),adsMB_NoButton);
-		receFrm=g_pCommEcu->AddressCodeEnter(0x33);
+		CDisplay::GetInstance()->MessageBox(CBinary("\x00\xFF\x05\x00\x00\x04",6),CBinary("\x00\xFF\x00\x00\x00\x09",6),adsMB_NoButton);
+		receFrm=CCommWithEcu::GetInstance()->AddressCodeEnter(0x33);
 		if(receFrm.size()>0)
 		{
 			binReceData=receFrm.GetFirstAnswerFrame();
@@ -2296,7 +2296,7 @@ short CCommLayer::OBDIICommSet_KLine(CBinary &binECUIDs)
 				case 0x6B8F:
 				case 0x6D8F:
 				case 0xEF8F:
-					g_pDisplay->MessageBox(CBinary("\x00\xFF\x05\x00\x00\x03",6),CBinary("\x00\xFF\x00\x00\x00\x09",6),adsMB_NoButton);
+					CDisplay::GetInstance()->MessageBox(CBinary("\x00\xFF\x05\x00\x00\x03",6),CBinary("\x00\xFF\x00\x00\x00\x09",6),adsMB_NoButton);
 					bCurBUS_ID=P_KWP2000_ON_K_LINE;
 					binCmd=CBinary("\xC2\x33\xF1\x01\x00\xE7",6);
 					sendFrm.SetDefaultReceiveFrameNumber(0xFF);
@@ -2311,7 +2311,7 @@ short CCommLayer::OBDIICommSet_KLine(CBinary &binECUIDs)
 			{
 				for(i=0;i<2;i++)
 				{
-					receFrm=g_pCommEcu->SendReceive(sendFrm);
+					receFrm=CCommWithEcu::GetInstance()->SendReceive(sendFrm);
 					if(receFrm.size())
 					{
 						for(j=0;j<receFrm[0].size();j++)
@@ -2338,7 +2338,7 @@ short CCommLayer::OBDIICommSet_KLine(CBinary &binECUIDs)
 
 	if(!iRet)
 	{
-		g_pCommEcu->KeepLink();
+		CCommWithEcu::GetInstance()->KeepLink();
 	}
 
 	return iRet;
@@ -2356,7 +2356,7 @@ short CCommLayer::OBDIICommSet_J1850_VPW(CBinary &binECUIDs)
 	short i=0,j=0;
 	unsigned char bECUID=0x00;
 
-	g_pDisplay->MessageBox(CBinary("\x00\xFF\x05\x00\x00\x02",6),CBinary("\x00\xFF\x00\x00\x00\x09",6),adsMB_NoButton);
+	CDisplay::GetInstance()->MessageBox(CBinary("\x00\xFF\x05\x00\x00\x02",6),CBinary("\x00\xFF\x00\x00\x00\x09",6),adsMB_NoButton);
 	
 	//binECUIDs;
 	
@@ -2388,7 +2388,7 @@ short CCommLayer::OBDIICommSet_J1850_VPW(CBinary &binECUIDs)
 	sendFrm=binCmd;
 	for(i=0;i<2;i++)
 	{
-		receFrm=g_pCommEcu->SendReceive(sendFrm);
+		receFrm=CCommWithEcu::GetInstance()->SendReceive(sendFrm);
 		LOG_DEBUG(TAG, "receFrm.size() = %d", receFrm.size());
 		if(receFrm.size())
 		{
@@ -2426,7 +2426,7 @@ short CCommLayer::OBDIICommSet_J1850_PWM(CBinary &binECUIDs)
 	short i=0,j=0;
 	unsigned char bECUID=0x00;
 	
-	g_pDisplay->MessageBox(CBinary("\x00\xFF\x05\x00\x00\x01",6),CBinary("\x00\xFF\x00\x00\x00\x09",6),adsMB_NoButton);
+	CDisplay::GetInstance()->MessageBox(CBinary("\x00\xFF\x05\x00\x00\x01",6),CBinary("\x00\xFF\x00\x00\x00\x09",6),adsMB_NoButton);
 	
 	bCurBUS_ID=P_ED_PWM;
 	bCommBUS_ID=bCurBUS_ID;
@@ -2451,7 +2451,7 @@ short CCommLayer::OBDIICommSet_J1850_PWM(CBinary &binECUIDs)
 	sendFrm=binCmd;
 	for(i=0;i<2;i++)
 	{
-		receFrm=g_pCommEcu->SendReceive(sendFrm);
+		receFrm=CCommWithEcu::GetInstance()->SendReceive(sendFrm);
 		if(receFrm.size())
 		{
 			for(j=0;j<receFrm[0].size();j++)
@@ -2487,13 +2487,13 @@ short CCommLayer::OBDIISetIdle()
 		binLinkCmd=CBinary("\xc2\x33\xf1\x3e\x01\x25",6);
 		sfTxf.SetDefaultReceiveFrameNumber(1);
 		sfTxf=binLinkCmd;
-		g_pCommEcu->KeepLink(2000,&sfTxf);
+		CCommWithEcu::GetInstance()->KeepLink(2000,&sfTxf);
 		break;
 	case P_ED_ISO_9141_K_LINE:
 		binLinkCmd=CBinary("\x68\x6A\xf1\x01\x00\xc4",6);
 		sfTxf.SetDefaultReceiveFrameNumber(1);
 		sfTxf=binLinkCmd;
-		g_pCommEcu->KeepLink(2000,&sfTxf);
+		CCommWithEcu::GetInstance()->KeepLink(2000,&sfTxf);
 		break;
 	default:
 		break;
@@ -2516,36 +2516,36 @@ short CCommLayer::OBDIIResetFilter(unsigned char bECUID)
 	case P_KWP2000_ON_K_LINE:
 		sprintf(strFilter,"%c%c",0xF1,bECUID);
 		FilterCond.SetNormalFilterMode(1,2,strFilter);
-		g_pCommEcu->ProtocolSet (PROTOCOL_KWP,&FilterCond);
+		CCommWithEcu::GetInstance()->ProtocolSet (PROTOCOL_KWP,&FilterCond);
 		break;
 	case P_ED_ISO_9141_K_LINE:
-		g_pCommEcu->TimeIntervalOver(50,60,3); // 重新按照文档定义设置一下时间，因为ISO是根据时间来接收的
+		CCommWithEcu::GetInstance()->TimeIntervalOver(50,60,3); // 重新按照文档定义设置一下时间，因为ISO是根据时间来接收的
 		sprintf(strFilter,"%c%c",0x6B,bECUID);
 		FilterCond.SetNormalFilterMode(1,2,strFilter);
-		g_pCommEcu->ProtocolSet (PROTOCOL_ISO,&FilterCond);
+		CCommWithEcu::GetInstance()->ProtocolSet (PROTOCOL_ISO,&FilterCond);
 		break;
 	case P_ED_VPW:
 		sprintf(strFilter,"%c%c",0x6B,bECUID);
 		FilterCond.SetNormalFilterMode(1,2,strFilter);
-		g_pCommEcu->ProtocolSet (PROTOCOL_VPW,&FilterCond);
+		CCommWithEcu::GetInstance()->ProtocolSet (PROTOCOL_VPW,&FilterCond);
 		break;
 	case P_ED_PWM:
 		sprintf(strFilter,"%c%c",0x6B,bECUID);
 		FilterCond.SetNormalFilterMode(1,2,strFilter);
-		g_pCommEcu->ProtocolSet (PROTOCOL_PWM,&FilterCond);
+		CCommWithEcu::GetInstance()->ProtocolSet (PROTOCOL_PWM,&FilterCond);
 		break;
 	case P_KWP2000_ON_CAN:
 		binCANFilterID=CBinary("\x07\xE8",2);
 		binCANFilterID.SetAt(1,bECUID);
 		FilterCond.AddCanFilterId(binCANFilterID);
-		g_pCommEcu->ProtocolSet(PROTOCOL_CANBUS,&FilterCond);
+		CCommWithEcu::GetInstance()->ProtocolSet(PROTOCOL_CANBUS,&FilterCond);
 		FilterCond.Empty();
 		FilterCond.SetCanFilterMode(3,0x10,4);
 		binFlowCtrlCmd=CBinary("\x08\x07\xdf\x30\x00\x04\x00\x00\x00\x00\x00",11);
 		binFlowCtrlCmd.SetAt(2,bECUID-0x08);
 		sf = binFlowCtrlCmd;
-		g_pCommEcu->SetAutoSendContinuedFrame(FilterCond,sf);
-		g_pCommEcu->SetNegativeHandleMethod(4,0x7f,6,0x78,1);
+		CCommWithEcu::GetInstance()->SetAutoSendContinuedFrame(FilterCond,sf);
+		CCommWithEcu::GetInstance()->SetNegativeHandleMethod(4,0x7f,6,0x78,1);
 		break;
 	case P_ED_ON_CAN:
 		binCANFilterID=CBinary("\x18\xDA\x11\xF1",4);
@@ -2554,14 +2554,14 @@ short CCommLayer::OBDIIResetFilter(unsigned char bECUID)
 		binCANFilterID=CBinary("\x18\xDA\xF1\x11",4);
 		binCANFilterID.SetAt(3,bECUID);
 		FilterCond.AddCanFilterId(binCANFilterID);
-		g_pCommEcu->ProtocolSet(PROTOCOL_CANBUS,&FilterCond);
+		CCommWithEcu::GetInstance()->ProtocolSet(PROTOCOL_CANBUS,&FilterCond);
 		FilterCond.Empty();
 		FilterCond.SetCanFilterMode(5,0x10,6);
 		binFlowCtrlCmd=CBinary("\x88\x18\xDA\x11\xf1\x30\x00\x04\x00\x00\x00\x00\x00",13);
 		binFlowCtrlCmd.SetAt(3,bECUID);
 		sf = binFlowCtrlCmd;
-		g_pCommEcu->SetAutoSendContinuedFrame(FilterCond,sf);
-		g_pCommEcu->SetNegativeHandleMethod(6,0x7f,8,0x78,1);
+		CCommWithEcu::GetInstance()->SetAutoSendContinuedFrame(FilterCond,sf);
+		CCommWithEcu::GetInstance()->SetNegativeHandleMethod(6,0x7f,8,0x78,1);
 		break;
 	default:
 		break;

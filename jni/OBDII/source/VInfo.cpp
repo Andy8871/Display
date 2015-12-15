@@ -166,15 +166,15 @@ short CVInfo::ShowVehicleInfo(vector<CBinaryGroup> vecModelGrpInfo)
 
 	while(1)
 	{
-		g_pDisplay->ActiveTest.Init(binTitle);
-		g_pDisplay->ActiveTest.SetFlag(0x8F);
-		g_pDisplay->ActiveTest.AddMsg(adsGetTextString(CBinary("\x00\xFF\x00\x00\x00\x02",6)));
-		g_pDisplay->ActiveTest.AddButton(CBinary("\x00\xFF\x00\x00\x00\x03",6),CActiveTestShow::BS_MASK); // Exit
+		CDisplay::GetInstance()->ActiveTest.Init(binTitle);
+		CDisplay::GetInstance()->ActiveTest.SetFlag(0x8F);
+		CDisplay::GetInstance()->ActiveTest.AddMsg(adsGetTextString(CBinary("\x00\xFF\x00\x00\x00\x02",6)));
+		CDisplay::GetInstance()->ActiveTest.AddButton(CBinary("\x00\xFF\x00\x00\x00\x03",6),CActiveTestShow::BS_MASK); // Exit
 		if(binVehicleID.GetSize())
-			g_pDisplay->ActiveTest.AddButton(CBinary("\x00\xFF\x00\x00\x00\x04",6),CActiveTestShow::BS_MASK); // Next
+			CDisplay::GetInstance()->ActiveTest.AddButton(CBinary("\x00\xFF\x00\x00\x00\x04",6),CActiveTestShow::BS_MASK); // Next
 		else
-			g_pDisplay->ActiveTest.AddButton(CBinary("\x00\xFF\x00\x00\x00\x04",6),CActiveTestShow::BS_LOCK); // Next
-		g_pDisplay->ActiveTest.AddButton(CBinary("\x00\xFF\x00\x00\x00\x06",6),CActiveTestShow::BS_MASK); // Clear
+			CDisplay::GetInstance()->ActiveTest.AddButton(CBinary("\x00\xFF\x00\x00\x00\x04",6),CActiveTestShow::BS_LOCK); // Next
+		CDisplay::GetInstance()->ActiveTest.AddButton(CBinary("\x00\xFF\x00\x00\x00\x06",6),CActiveTestShow::BS_MASK); // Clear
 		for(i=0;i<iLevelNum;i++)
 		{
 			vecModelInfo=vecModelGrpInfo[i];
@@ -192,9 +192,9 @@ short CVInfo::ShowVehicleInfo(vector<CBinaryGroup> vecModelGrpInfo)
 			{
 				strValue=adsGetTextString(CBinary("\x00\xFF\x00\x00\x00\x05",6));
 			}
-			g_pDisplay->ActiveTest.Add(vecItemName[i],strValue,"");
+			CDisplay::GetInstance()->ActiveTest.Add(vecItemName[i],strValue,"");
 		}
-		iSelectNum=g_pDisplay->ActiveTest.Show(iSelLevel);
+		iSelectNum=CDisplay::GetInstance()->ActiveTest.Show(iSelLevel);
 		if((iSelLevel>=0)&&(iSelLevel<iLevelNum))
 		{
 			vecItemInfo=vecModelGrpInfo[iSelLevel];
@@ -212,7 +212,7 @@ short CVInfo::ShowVehicleInfo(vector<CBinaryGroup> vecModelGrpInfo)
 #ifdef _DEBUG
 			char strVehicleID[20];
 			sprintf(strVehicleID,"%02X%02X%02X%02X",binVehicleID[0],binVehicleID[1],binVehicleID[2],binVehicleID[3]);
-			g_pDisplay->MessageBox(strVehicleID,"Vehicle ID");
+			CDisplay::GetInstance()->MessageBox(strVehicleID,"Vehicle ID");
 #endif
 			ShowSystemList();
 			break;
@@ -354,13 +354,13 @@ short CVInfo::SelectLevelInfo(string strTitle,short iLevel,vector<CBinaryGroup> 
 	vecItemName.clear();
 	vecModelInfo=vecModelGrpInfo[iLevel];
 	iLevelNum=vecModelGrpInfo.size();
-	g_pDisplay->Menu.Init(strTitle);
+	CDisplay::GetInstance()->Menu.Init(strTitle);
 	for(i=0;i<vecModelInfo.size();i++)
 	{
 		strItemName=CommonTools->GetTxtString(vecModelInfo[i]);
-		g_pDisplay->Menu.Add(strItemName);
+		CDisplay::GetInstance()->Menu.Add(strItemName);
 	}
-	iReturn=g_pDisplay->Menu.Show(mstMenuStruct);
+	iReturn=CDisplay::GetInstance()->Menu.Show(mstMenuStruct);
 	if(iReturn<0)
 	{
 		return 1;
@@ -513,7 +513,7 @@ short CVInfo::SystemEnter(CBinary binTitle,CBinaryGroup vecSystemID)
 	bool Flag_Enter=false;
 	CBasicDiagnosticUnit BasicDiagUnit;
 
-	g_pDisplay->MessageBox(STRID_CONNECTING_ECU,STRID_INFORMATION,adsMB_NoButton);//Connecting ECU...
+	CDisplay::GetInstance()->MessageBox(STRID_CONNECTING_ECU,STRID_INFORMATION,adsMB_NoButton);//Connecting ECU...
 	Flag_Enter=false;
 	for(i=0;i<vecSystemID.size();i++)
 	{
@@ -530,7 +530,7 @@ short CVInfo::SystemEnter(CBinary binTitle,CBinaryGroup vecSystemID)
 	}
 	if(Flag_Enter==false)
 	{
-		g_pDisplay->MessageBox(STRID_CONNECT_ECU_FAILED,STRID_ERROR);
+		CDisplay::GetInstance()->MessageBox(STRID_CONNECT_ECU_FAILED,STRID_ERROR);
 	}
 
 	return 1;

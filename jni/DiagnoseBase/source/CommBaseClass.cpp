@@ -18,7 +18,7 @@ CCommBase* CCommBase::m_pInstance = NULL;
 
 CCommBase::CCommBase()
 {
-	env = NULL;
+	m_env = NULL;
 	m_comBuff = NULL;
 	m_guiCallbackWaitForResponse = NULL;
 	m_guiCallbackImmediate = NULL;
@@ -57,9 +57,9 @@ bool CCommBase::Connect(JNIEnv* pEnv)
 		memset(m_comBuff, 0, 0xFFFF);
 	}
 
-	env = pEnv;
+	m_env = pEnv;
 	/* 获取Java回掉函数所在的类 */
-	jclass clazz = env->FindClass("com/TD/Model/Diagnose");
+	jclass clazz = m_env->FindClass("com/TD/Model/Diagnose");
 	if (NULL == clazz)
 		return false;
 	m_clazz = clazz;
@@ -67,7 +67,7 @@ bool CCommBase::Connect(JNIEnv* pEnv)
 	/* 获取Java回掉函数guiCallbackImmediate */
 	if (NULL == m_guiCallbackImmediate && NULL != m_clazz)
 	{
-		m_guiCallbackImmediate = env->GetStaticMethodID(m_clazz,
+		m_guiCallbackImmediate = m_env->GetStaticMethodID(m_clazz,
 				"guiCallbackImmediate", "([B)Z");
 		if (NULL == m_guiCallbackImmediate)
 		{
@@ -83,7 +83,7 @@ bool CCommBase::Connect(JNIEnv* pEnv)
 	/* 获取Java回掉函数guiCallbackWaitForResponse */
 	if (NULL == m_guiCallbackWaitForResponse && NULL != m_clazz)
 	{
-		m_guiCallbackWaitForResponse = env->GetStaticMethodID(m_clazz,
+		m_guiCallbackWaitForResponse = m_env->GetStaticMethodID(m_clazz,
 				"guiCallbackWaitForResponse", "([B)[B");
 		if (NULL == m_guiCallbackWaitForResponse)
 		{
@@ -107,7 +107,7 @@ void CCommBase::Disconnect()
 {
 	if (NULL != m_clazz)
 	{
-		env->DeleteLocalRef(m_clazz);
+		m_env->DeleteLocalRef(m_clazz);
 		m_clazz = NULL;
 	}
 
@@ -127,14 +127,14 @@ bool CCommBase::WriteForImmediate(const char* buff, int nLen)
 		return false;
 	/* 将C字符串转换为Java的byte类型数组 */
 	jbyte* pBuff = (jbyte*) buff;
-	jbyteArray arrBuff = env->NewByteArray(nLen);
-	env->SetByteArrayRegion(arrBuff, 0, nLen, pBuff);
-	bool bRes = env->CallStaticBooleanMethod(m_clazz, m_guiCallbackImmediate,
+	jbyteArray arrBuff = m_env->NewByteArray(nLen);
+	m_env->SetByteArrayRegion(arrBuff, 0, nLen, pBuff);
+	bool bRes = m_env->CallStaticBooleanMethod(m_clazz, m_guiCallbackImmediate,
 			arrBuff);
 
 	/* 释放分配的内存 */
-	env->ReleaseByteArrayElements(arrBuff, pBuff, 0);
-	env->DeleteLocalRef(arrBuff);
+	m_env->ReleaseByteArrayElements(arrBuff, pBuff, 0);
+	m_env->DeleteLocalRef(arrBuff);
 	return bRes;
 }
 
@@ -148,17 +148,17 @@ char* CCommBase::WriteForWait(const char* buff, int nLen, int & outLen)
 
 	/* 将C字符串转换为Java的byte类型数组 */
 	jbyte* pBuff = (jbyte*) buff;
-	jbyteArray arrBuff = env->NewByteArray(nLen);
+	jbyteArray arrBuff = m_env->NewByteArray(nLen);
 
-	env->SetByteArrayRegion(arrBuff, 0, nLen, pBuff);
+	m_env->SetByteArrayRegion(arrBuff, 0, nLen, pBuff);
 
 	/* 调用Java函数:将数据发送给UI,并等待UI的操作结果 */
-	jbyteArray objRes = (jbyteArray) env->CallStaticObjectMethod(m_clazz,
+	jbyteArray objRes = (jbyteArray) m_env->CallStaticObjectMethod(m_clazz,
 			m_guiCallbackWaitForResponse, arrBuff);
 
 	/* 释放分配的内存 */
-	env->ReleaseByteArrayElements(arrBuff, pBuff, JNI_ABORT);
-	env->DeleteLocalRef(arrBuff);
+	m_env->ReleaseByteArrayElements(arrBuff, pBuff, JNI_ABORT);
+	m_env->DeleteLocalRef(arrBuff);
 	arrBuff = NULL;
 	if (NULL == objRes)
 	{
@@ -166,30 +166,30 @@ char* CCommBase::WriteForWait(const char* buff, int nLen, int & outLen)
 	}
 
 	/* 将UI返回的操作结果从Java byte[]转换成C语言的字符指针 */
-	outLen = env->GetArrayLength(objRes);
+	outLen = m_env->GetArrayLength(objRes);
 	memset(m_comBuff, 0, 0xFFFF);
-	jbyte* pRes =  env->GetByteArrayElements(objRes, JNI_FALSE);
+	jbyte* pRes =  m_env->GetByteArrayElements(objRes, JNI_FALSE);
 	memcpy(m_comBuff, (char*)pRes, outLen);
 	/* 释放分配的内存 */
-	env->ReleaseByteArrayElements(objRes, pRes, JNI_ABORT);
-	env->DeleteLocalRef(objRes);
+	m_env->ReleaseByteArrayElements(objRes, pRes, JNI_ABORT);
+	m_env->DeleteLocalRef(objRes);
 	objRes = NULL;
 	return m_comBuff;
 }
 
 void CCommBase::LogExceptionFromJava()
 {
-	if (env->ExceptionOccurred() != NULL)
+	if (m_env->ExceptionOccurred() != NULL)
 	{
-		env->ExceptionDescribe();
-		env->ExceptionClear();
+		m_env->ExceptionDescribe();
+		m_env->ExceptionClear();
 	}
 }
 
 void CCommBase::ThrowExceptionToJava(string strNote)
 {
-	jclass clazzException = env->FindClass("java/lang/RuntimeException");
-	env->ThrowNew(clazzException, strNote.c_str());
+	jclass clazzException = m_env->FindClass("java/lang/RuntimeException");
+	m_env->ThrowNew(clazzException, strNote.c_str());
 }
 
 /*jstring CCommBase::str2jstring(const char* pBuff)

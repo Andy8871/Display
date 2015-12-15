@@ -38,7 +38,7 @@
 #define ERRENTRYMENUID	    -4
 #define ERRCALLBACKRESULT	-5
 
-extern CDisplay * g_pDisplay;
+/*CDisplay * g_pDisplay = CDisplay::GetInstance();*/
 
 #if 1
 
@@ -236,7 +236,7 @@ int CMenuTree::Org_ShowMenu (CBinary binIDMenu,unsigned char byFlag)
 
 		// 下面是显示下行菜单
 		CBinary menuTextId	= vctBinResult[0];
-		g_pDisplay->Menu.Init(menuTextId);
+		CDisplay::GetInstance()->Menu.Init(menuTextId);
 		CBinary binWork;
 		if(iNextNumber > 0)
 		{
@@ -285,7 +285,7 @@ int CMenuTree::Org_ShowMenu (CBinary binIDMenu,unsigned char byFlag)
 			{
 				NextTextId = vctBinResult[0];
 			}
-			g_pDisplay->Menu.Add(NextTextId);
+			CDisplay::GetInstance()->Menu.Add(NextTextId);
 
 			LogTimeCost("Run here 6.3 = ");//by for debug
 		}
@@ -306,12 +306,12 @@ int CMenuTree::Org_ShowMenu (CBinary binIDMenu,unsigned char byFlag)
 
 		if(byFlag !=0)
 		{
-			g_pDisplay->Menu.SetFlag(byFlag);
-			iSelected = g_pDisplay->Menu.Show(menuLevel.structMenu);
+			CDisplay::GetInstance()->Menu.SetFlag(byFlag);
+			iSelected = CDisplay::GetInstance()->Menu.Show(menuLevel.structMenu);
 		}
 		else
 		{
-			iSelected = g_pDisplay->Menu.Show(menuLevel.structMenu);
+			iSelected = CDisplay::GetInstance()->Menu.Show(menuLevel.structMenu);
 		}
 
 		LogTimeCost("Run here 8 = ");//by for debug
@@ -399,7 +399,7 @@ bool CMenuTree::IsTaskIdOk(unsigned int unTaskId)
 			sprintf(cMessage,"No authority,Please contact your local dealer!");
 			
 		}
-		g_pDisplay->MessageBox(cMessage, "Error");
+		CDisplay::GetInstance()->MessageBox(cMessage, "Error");
 	}
 	//End add by tom sun 20100406
 
@@ -418,7 +418,7 @@ int CMenuTree::ShowMenu(CBinary binIDMenu,unsigned char byFlag)
 	}
 	
 	CCommunicationWithDisplay* p_tx_rx = NULL;
-	g_pDisplay->GetSendAndReceiveHandle(&p_tx_rx);
+	CDisplay::GetInstance()->GetSendAndReceiveHandle(&p_tx_rx);
 	
 	bool b_1st_run = true;
 	unsigned int un_task_ret = 0;

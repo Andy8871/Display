@@ -24,7 +24,7 @@ using namespace std;
 
 //#define TASKIDTYPE 2
 
-#define STRING_ONLY		0x80//hpy add for pure string 20131203
+#define STRING_ONLY		0x80
 
 
 //用户按键键值
@@ -42,9 +42,6 @@ using namespace std;
 #define	adsIDBACK		0x0B
 #define	adsIDCHANNEL	0x0C //AUDI 
 #define	adsIDSHORTTESTENTER	0x0D //SHORTTESTENTER
-#ifdef DATA_DRV_EXT
-#define	adsIDSTOP    	0x1D //Datadrv
-#endif
 //按钮标志
 #define	adsMB_NoButton			0x00
 #define	adsMB_OK				0x01
@@ -79,16 +76,14 @@ CDisplay* getDisplayObject(void);
 class CDisplay
 {
 public:
+	static CDisplay* GetInstance();
+private:
+	static CDisplay* m_pInstance;
+
 	CDisplay():Menu(m_Menu),
 		       TroubleCode(m_TroubleCode),
 		       DataStream(m_DataStream),
 			   ActiveTest(m_ActiveTest),
-/*
-#ifdef DATA_DRV_EXT
-			   St(m_St),
-// 			   ScriptParse(m_ScriptParse),
-#endif	// #ifdef DATA_DRV_EXT
-*/
 			   MultiSelect(m_MultiSelect),
 		       VehicleInfo(m_VehicleInfo),
 		       ShortTest(m_ShortTest),
@@ -97,7 +92,17 @@ public:
 	}
 
 	~CDisplay();
+	/* 仅仅只用于在系统退出时自动调用其析构函数来释放CDisplay指针对象 */
+	class Garbo
+	{
+		~Garbo()
+		{
+			if (NULL != CDisplay::m_pInstance)
+				delete CDisplay::m_pInstance;
+		}
+	};
 
+	static Garbo m_Garbo;
 public:
 	class CInputValue 
     {

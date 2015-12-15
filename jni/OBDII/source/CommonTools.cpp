@@ -46,7 +46,7 @@ short CCommonTools::ReadDBFile(vector<CBinary> &ucInfo, string FileName, CBinary
 	if(!vipIndData.Open(FileName)) //打开文件
 	{
 		__android_log_print(ANDROID_LOG_DEBUG, "CCommonTools", "Unable to open file %s", FileName.c_str());
-		//g_pDisplay->MessageBox(CANNOT_OPEN_FILE,INFORMATION);
+		//CDisplay::GetInstance()->MessageBox(CANNOT_OPEN_FILE,INFORMATION);
 		return 0;
 	}
 
@@ -70,7 +70,7 @@ short CCommonTools::GetDataBase(CDatabase &dbData,string FileName)
 {
 	if(!dbData.Open(FileName)) //打开文件
 	{
-		//g_pDisplay->MessageBox(CANNOT_OPEN_FILE,INFORMATION);
+		//CDisplay::GetInstance()->MessageBox(CANNOT_OPEN_FILE,INFORMATION);
 		return 0;
 	}
 	
@@ -160,14 +160,14 @@ short CCommonTools::MenuAddItem(CBinary TitleTxt,vector<CBinary> AllMenuTxt)
 	
 	MenuNum=AllMenuTxt.size();
 	
-	g_pDisplay->Menu.Init(TitleTxt);
+	CDisplay::GetInstance()->Menu.Init(TitleTxt);
 	for(short i=0;i<MenuNum;i++)
 	{
 		MenuID=AllMenuTxt[i];
-		g_pDisplay->Menu.Add(MenuID);
+		CDisplay::GetInstance()->Menu.Add(MenuID);
 	}
 	
-	iRet=g_pDisplay->Menu.Show(mstMenuStruct);
+	iRet=CDisplay::GetInstance()->Menu.Show(mstMenuStruct);
 	
 	if(iRet == -1)
 	{
@@ -185,13 +185,13 @@ short CCommonTools::MenuAddItemStr(string TitleTxt,vector<string> AllMenuTxt)
 	
 	MenuNum=AllMenuTxt.size();
 	
-	g_pDisplay->Menu.Init(TitleTxt);
+	CDisplay::GetInstance()->Menu.Init(TitleTxt);
 	for(short i=0;i<MenuNum;i++)
 	{
-		g_pDisplay->Menu.Add(AllMenuTxt[i]);
+		CDisplay::GetInstance()->Menu.Add(AllMenuTxt[i]);
 	}
 	
-	iRet=g_pDisplay->Menu.Show(mstMenuStruct);
+	iRet=CDisplay::GetInstance()->Menu.Show(mstMenuStruct);
 	
 	if(iRet == -1)
 	{
@@ -394,7 +394,7 @@ short CCommonTools::IsExistDBFile(string FileName,CBinary binId)
 
 	if(!vipIndData.Open(FileName)) //打开文件
 	{
-		//g_pDisplay->MessageBox(CANNOT_OPEN_FILE,INFORMATION);
+		//CDisplay::GetInstance()->MessageBox(CANNOT_OPEN_FILE,INFORMATION);
 		return 0;
 	}
 

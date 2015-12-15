@@ -16,9 +16,11 @@ class CRunLog;
 #endif
 */
 
+/*
 class CCommWithEcu;
 
 CCommWithEcu* getCommWithEcuObject();
+*/
 
 class CCommWithEcu
 {
@@ -38,7 +40,7 @@ protected:
 	bool m_bAssembledFlag;		// 合发送标识，执行Begin()为true, 执行End()为false 
 	int m_iEcuNum;                 // 组合发送中，更ECU通信的命令个数
 
-	int m_bRepeating;			// 循环发送标志
+	bool m_bRepeating;			// 循环发送标志
 
 #ifdef DATA_DRV_EXT
 
@@ -62,8 +64,22 @@ protected:
 	vector<ASSEMBLECHAIN> m_vAssembleChain;
 	
 public:
-	CCommWithEcu(void) { m_bAssembledFlag = false;  m_bRepeating = false; m_bCommBlockStart=0; m_hBlockHandle = NULL; };
+	static CCommWithEcu* GetInstance();
+private:
+	static CCommWithEcu* m_pInstance;
+	CCommWithEcu(void) { m_bAssembledFlag = false;  m_bRepeating = false; m_bCommBlockStart=false; m_hBlockHandle = 0; };
 	~CCommWithEcu(void) { };
+
+	class Garbo
+	{
+		~Garbo()
+		{
+			if (NULL != CCommWithEcu::m_pInstance)
+				delete CCommWithEcu::m_pInstance;
+		}
+	};
+
+	static Garbo m_garbo;
 public:
 	////////////////////////////////////////////////////////////////////////
 	int m_hBlockHandle;

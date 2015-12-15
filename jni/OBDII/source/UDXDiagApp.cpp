@@ -27,7 +27,7 @@ int DiagnosisMain()
 
 // 	if(Demo_Flag==true)
 // 	{
-// 		g_pDisplay->MessageBox(CBinary("\x00\xFF\x00\x00\x00\x12",6),CBinary("\x00\xFF\x00\x00\x00\x09",6));
+// 		CDisplay::GetInstance()->MessageBox(CBinary("\x00\xFF\x00\x00\x00\x12",6),CBinary("\x00\xFF\x00\x00\x00\x09",6));
 // 		return 1;
 // 	}
 
@@ -36,8 +36,8 @@ int DiagnosisMain()
  		Log = new CRunLog;
  		if (Log)
  		{
- 			g_pCommEcu->SetRunLog(Log);
- 			Log=g_pCommEcu->GetRunLog();
+ 			CCommWithEcu::GetInstance()->SetRunLog(Log);
+ 			Log=CCommWithEcu::GetInstance()->GetRunLog();
  			Log->SetBufSize(0);
  		}
  	}*/
@@ -71,30 +71,30 @@ int DiagnosisMain()
 
 	/*char strVehicleID[20];
 	 sprintf(strVehicleID, "%02X%02X%02X%02X", 0xAB, 0xBC, 0xCD, 0xDE);*/
-	//g_pDisplay->MessageBox(strVehicleID, "Vehicle ID");
-	/*g_pDisplay->Menu.Init("test");
-	g_pDisplay->Menu.Add("MENU_ITEM1");
-	g_pDisplay->Menu.Add("MENU_ITEM2");
-	g_pDisplay->Menu.Add("MENU_ITEM3");
-	g_pDisplay->Menu.Add("MENU_ITEM4");
+	//CDisplay::GetInstance()->MessageBox(strVehicleID, "Vehicle ID");
+	/*CDisplay::GetInstance()->Menu.Init("test");
+	CDisplay::GetInstance()->Menu.Add("MENU_ITEM1");
+	CDisplay::GetInstance()->Menu.Add("MENU_ITEM2");
+	CDisplay::GetInstance()->Menu.Add("MENU_ITEM3");
+	CDisplay::GetInstance()->Menu.Add("MENU_ITEM4");
 
 	CMenuShow::CMenuStruct mstMenuStruct;
-	if (g_pDisplay->Menu.Show(mstMenuStruct) == -1)
+	if (CDisplay::GetInstance()->Menu.Show(mstMenuStruct) == -1)
 		return 1;
-	g_pDisplay->Menu.Add("MENU_ITEM3");
-	g_pDisplay->Menu.Add("MENU_ITEM4");
-	g_pDisplay->Menu.Add("MENU_ITEM6");
-	g_pDisplay->Menu.Add("MENU_ITEM5");
+	CDisplay::GetInstance()->Menu.Add("MENU_ITEM3");
+	CDisplay::GetInstance()->Menu.Add("MENU_ITEM4");
+	CDisplay::GetInstance()->Menu.Add("MENU_ITEM6");
+	CDisplay::GetInstance()->Menu.Add("MENU_ITEM5");
 
-	if (g_pDisplay->Menu.Show(mstMenuStruct) == -1)
+	if (CDisplay::GetInstance()->Menu.Show(mstMenuStruct) == -1)
 		return 1;
 
-	g_pDisplay->Menu.Add("MENU_ITEM7");
-	g_pDisplay->Menu.Add("MENU_ITEM8");
-	g_pDisplay->Menu.Add("MENU_ITEM9");
-	g_pDisplay->Menu.Add("MENU_ITEM10");
+	CDisplay::GetInstance()->Menu.Add("MENU_ITEM7");
+	CDisplay::GetInstance()->Menu.Add("MENU_ITEM8");
+	CDisplay::GetInstance()->Menu.Add("MENU_ITEM9");
+	CDisplay::GetInstance()->Menu.Add("MENU_ITEM10");
 
-	if (g_pDisplay->Menu.Show(mstMenuStruct) == -1)
+	if (CDisplay::GetInstance()->Menu.Show(mstMenuStruct) == -1)
 		return 1;*/
 
 

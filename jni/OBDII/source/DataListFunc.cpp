@@ -520,13 +520,13 @@ short CDataListFunc::SystemInfoShow(CBinary binTitle,CBinaryGroup vecAllItemID)
 	vector<string> vecAllItemUnit;
 	string StringValue="";
 
-	g_pDisplay->MessageBox(STRID_COMMUNICATING,binTitle,adsMB_NoButton);
+	CDisplay::GetInstance()->MessageBox(STRID_COMMUNICATING,binTitle,adsMB_NoButton);
 	
 	iNum=GetItemTxtInfo(vecAllItemID,vecAllItemName,vecAllItemUnit);
 
 	if(!iNum)
 	{
-		g_pDisplay->MessageBox(CBinary("\x00\xFF\x05\x00\x00\x09",6),binTitle);
+		CDisplay::GetInstance()->MessageBox(CBinary("\x00\xFF\x05\x00\x00\x09",6),binTitle);
 		return 0;
 	}
 
@@ -536,16 +536,16 @@ short CDataListFunc::SystemInfoShow(CBinary binTitle,CBinaryGroup vecAllItemID)
 		return 0;
 	}
 	CommLayer->InitHisData();
-	g_pDisplay->VehicleInfo.Init(binTitle);
+	CDisplay::GetInstance()->VehicleInfo.Init(binTitle);
 	for(i=0;i<iNum;i++)
 	{
 		if(!ReadDataAndCalculate(dbData,vecAllItemID[i],StringValue))
 		{
 			StringValue="*****";
 		}
-		g_pDisplay->VehicleInfo.Add(vecAllItemName[i],StringValue);
+		CDisplay::GetInstance()->VehicleInfo.Add(vecAllItemName[i],StringValue);
 	}
-	g_pDisplay->VehicleInfo.Show();
+	CDisplay::GetInstance()->VehicleInfo.Show();
 
 	dbData.Close();
 	return 1;
@@ -575,15 +575,15 @@ short CDataListFunc::DataListFlash(CBinary binTitle,CBinaryGroup vecAllItemID)
 
 	while(true)
 	{
-		g_pDisplay->MultiSelect.Init(binTitle);
+		CDisplay::GetInstance()->MultiSelect.Init(binTitle);
 		for(i=0;i<iAllItemNum;i++)
 		{
 			StringValue=vecAllItemName[i];
-			g_pDisplay->MultiSelect.Add(vecAllItemName[i]);
+			CDisplay::GetInstance()->MultiSelect.Add(vecAllItemName[i]);
 		}
-		g_pDisplay->MultiSelect.SetFlag(true);
-		g_pDisplay->MultiSelect.AddMsg(adsGetTextString(CBinary("\x00\xFF\x00\x00\x00\x08",6)));
-		if(!g_pDisplay->MultiSelect.Show(StreamSelected))
+		CDisplay::GetInstance()->MultiSelect.SetFlag(true);
+		CDisplay::GetInstance()->MultiSelect.AddMsg(adsGetTextString(CBinary("\x00\xFF\x00\x00\x00\x08",6)));
+		if(!CDisplay::GetInstance()->MultiSelect.Show(StreamSelected))
 		{
 			break;
 		}
@@ -630,7 +630,7 @@ short CDataListFunc::DataListFlash(CBinary binTitle,CBinaryGroup vecAllItemID)
 			while(true)
 			{
 				CommLayer->InitHisData();
-				g_pDisplay->DataStream.Init(uiTop,uiAll,adsGetTextString(binTitle));
+				CDisplay::GetInstance()->DataStream.Init(uiTop,uiAll,adsGetTextString(binTitle));
 				uiBottom=uiTop+uiNum;
 				if(uiBottom>uiAll)
 					uiBottom = uiAll;
@@ -647,14 +647,14 @@ short CDataListFunc::DataListFlash(CBinary binTitle,CBinaryGroup vecAllItemID)
 						{
 							/* 初始化数据流的值,所有的数据流值都初始为 "---" */
 							/*vSaveValue.push_back("---");*/
-							g_pDisplay->DataStream.Add(vecSelItemName[i],"---",vecSelItemUnit[i]);
+							CDisplay::GetInstance()->DataStream.Add(vecSelItemName[i],"---",vecSelItemUnit[i]);
 						}
 						Flag_Success=true;
 						break;
 					}
 					else
 					{
-						uiFlag = g_pDisplay->DataStream.AcceptMsg();
+						uiFlag = CDisplay::GetInstance()->DataStream.AcceptMsg();
 
 						if(1 == uiFlag || 2 == uiFlag)//1:下翻 2:上翻
 						{
@@ -662,7 +662,7 @@ short CDataListFunc::DataListFlash(CBinary binTitle,CBinaryGroup vecAllItemID)
 							iCountFlag = 0;
 							for(j=i;j<uiBottom;j++)//将还没通讯的显示完
 							{
-								g_pDisplay->DataStream.Add(vecSelItemName[i],"---",vecSelItemUnit[i]);
+								CDisplay::GetInstance()->DataStream.Add(vecSelItemName[i],"---",vecSelItemUnit[i]);
 							}
 							Flag_Success=true;
 							break;
@@ -679,7 +679,7 @@ short CDataListFunc::DataListFlash(CBinary binTitle,CBinaryGroup vecAllItemID)
 							bChanged = true;
 						}
 						LOG_DEBUG(TAG, "Item :%s %s %s", vecSelItemName[i].c_str(), StringValue.c_str(), vecSelItemUnit[i].c_str());*/
-						g_pDisplay->DataStream.Add(vecSelItemName[i],StringValue,vecSelItemUnit[i]);
+						CDisplay::GetInstance()->DataStream.Add(vecSelItemName[i],StringValue,vecSelItemUnit[i]);
 					}
 					
 				}
@@ -689,7 +689,7 @@ short CDataListFunc::DataListFlash(CBinary binTitle,CBinaryGroup vecAllItemID)
 					return 0;
 				}
 
-				if (g_pDisplay->DataStream.Show(uiTop, uiNum) == 0x0b)
+				if (CDisplay::GetInstance()->DataStream.Show(uiTop, uiNum) == 0x0b)
 				{
 					LOG_DEBUG(TAG, "return from data stream");
 					DataListEndComm();

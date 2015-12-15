@@ -133,9 +133,12 @@ public class Diagnose extends Thread implements ControllerProtocol{
 		return bRes;
 	}
 	
-
+	/* 启动诊断程序，诊断程序具体实现在Native层实现 */
 	public native void RunDiagnose();
-
+	
+	/* 退出诊断程序，诊断程序具体实现在Native层实现 */
+	public native void ExitDiagnose();
+	
 	public static CommData getData() {
 		return data;
 	}

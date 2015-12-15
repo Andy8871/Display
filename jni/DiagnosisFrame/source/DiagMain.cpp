@@ -14,13 +14,12 @@
 #include "LogCat.h"
 static const char* TAG = "DiagMain";
 
-CCommWithEcu* g_pCommEcu = NULL; // 全局通信接口
-CDisplay* g_pDisplay = NULL; // 全局显示接口
-//JavaVM* g_pVM = NULL;
+//CCommWithEcu* g_pCommEcu = NULL; // 全局通信接口
+//CDisplay* g_pDisplay = NULL; // 全局显示接口
 float g_flLibVersion;
 
 /* 启动诊断程序 */
-void Native_Run(JNIEnv* env, jobject* obj)
+void Native_Run(JNIEnv* env, jobject obj)
 {
 	//开始诊断
 	try
@@ -34,9 +33,15 @@ void Native_Run(JNIEnv* env, jobject* obj)
 	}
 
 }
+
+void Native_Exit(JNIEnv* env, jobject obj)
+{
+
+}
 static JNINativeMethod gMethods[] =
 {
-{ "RunDiagnose", "()V", (void*) Native_Run }
+{ "RunDiagnose", "()V", (void*) Native_Run },
+{ "ExitDiagnose", "()V", (void*) Native_Exit }
 };
 
 void ThrowExceptionToJava(JNIEnv* env, string strNote)

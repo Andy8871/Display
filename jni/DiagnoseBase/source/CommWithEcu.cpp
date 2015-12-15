@@ -1,8 +1,10 @@
+#include <pthread.h>
 #include "assert.h"
 #include "EcuCommException.h"
 #include "CommWithEcu.h"
 #include "RunEnvironment.h"
 #include "LogCat.h"
+
 /*
  #ifndef WIN32
  //#include <sys/semaphore.h>
@@ -23,12 +25,12 @@ extern CDisplay * g_pDisplay;
 #endif
 
 #define TAG  "CCommWithEcu"
-CCommWithEcu * g_pCommWithEcu;
+/*CCommWithEcu * g_pCommWithEcu;
 CCommWithEcu* getCommWithEcuObject()
 {
 	g_pCommWithEcu = new CCommWithEcu();
 	return g_pCommWithEcu;
-}
+}*/
 
 /********************************************************************
  功    能：	1、建立与下位机的连接；
@@ -40,6 +42,24 @@ CCommWithEcu* getCommWithEcuObject()
 CReceiveFrame g_rfDemo;
 unsigned char g_bDemoFlag = 1;
 unsigned char g_bProtocol = 1;
+
+
+CCommWithEcu* CCommWithEcu::m_pInstance = NULL;
+
+CCommWithEcu* CCommWithEcu::GetInstance()
+{
+	pthread_mutex_t mutex_t = PTHREAD_MUTEX_INITIALIZER;
+	pthread_mutex_init(&mutex_t, NULL);
+	if (NULL == m_pInstance)
+	{
+		pthread_mutex_lock(&mutex_t);
+		if (NULL == m_pInstance)
+			m_pInstance = new CCommWithEcu();
+		pthread_mutex_unlock(&mutex_t);
+	}
+	pthread_mutex_destroy(&mutex_t);
+	return m_pInstance;
+}
 
 void CCommWithEcu::SetDemoFrame(CBinaryGroup &bg)
 {

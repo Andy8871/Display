@@ -4,7 +4,7 @@
 #include "RunEnvironment.h"
 #include "RunLog.h"
 #include "CommWithEcu.h"
-extern CCommWithEcu*	g_pCommEcu;
+//extern CCommWithEcu*	g_pCommEcu;
 /********************************************************************************
 功    能：	诊断功能运行入口 
 参数说明：	unsigned short uiWay 工作方式，即要执行的功能
@@ -15,7 +15,7 @@ short CDiagnosisUnit::Enter (unsigned short uiWay)
 {
 	short iRet = 0;
 	if (CRunEnvironment::GetCheckMode() == true){
-		CRunLog* log = g_pCommEcu->GetRunLog();
+		CRunLog* log = CCommWithEcu::GetInstance()->GetRunLog();
 		if (log){
 			string temp = "Menu:\n";
 			temp += CRunEnvironment::GetMenuChoosedDir();
@@ -93,7 +93,7 @@ CDiagnosisUnit::~CDiagnosisUnit (void)
 {
   if (CRunEnvironment::GetCheckMode() == true)
   {
-    CRunLog* Log4Exit = g_pCommEcu->GetRunLog();
+    CRunLog* Log4Exit = CCommWithEcu::GetInstance()->GetRunLog();
     if (Log4Exit)
     {
       //Log4Exit->WriteContent("",TRUE);// by deleted for Logging Function Optimization 20120712
@@ -122,7 +122,7 @@ CDiagnosisUnit::CDiagnosisUnit (void)
 			return ;
 
 		Log->WriteMenu();
-		g_pCommEcu->SetRunLog(Log);
+		CCommWithEcu::GetInstance()->SetRunLog(Log);
 	}
 } 
 ////End: by added for Logging Function Optimization 20120712

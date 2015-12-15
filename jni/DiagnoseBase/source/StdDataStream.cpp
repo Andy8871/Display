@@ -30,8 +30,8 @@
 
 #include "assert.h"
 
-extern CDisplay * g_pDisplay;
-extern CCommWithEcu * g_pCommWithEcu;
+/*extern CDisplay * g_pDisplay;*/
+//extern CCommWithEcu * g_pCommWithEcu;
 
 // define error
 #define	NODATASTREAMITEM	-1		// 传入的数据流ID数组为空，没有数据流项
@@ -45,7 +45,7 @@ extern CCommWithEcu * g_pCommWithEcu;
 #define	CMDIDINDSLIB		4	   // 数据流库中的命令ID在项中的起始位置（命令可能有多条）
 
 
-extern CCommWithEcu * g_pCommWithEcu;	//全局通信接口
+//extern CCommWithEcu * g_pCommWithEcu;	//全局通信接口
 
 CStdDataStream::CStdDataStream(void) 
 { 
@@ -230,14 +230,14 @@ short CStdDataStream::ReadDataStream (vector<CBinary> *paidDataStream)
 			CMultiSelectShow::CSelectedItemData aSelected;
 			// 设置了显示多选窗口选项
 
-			g_pDisplay->MultiSelect.Init("");
+			CDisplay::GetInstance()->MultiSelect.Init("");
 
 			for(vIter = paidDataStream->begin(); vIter != paidDataStream->end(); vIter++)
 			{
-				g_pDisplay->MultiSelect.Add(*vIter);
+				CDisplay::GetInstance()->MultiSelect.Add(*vIter);
 
 			}
-			if (!g_pDisplay->MultiSelect.Show(aSelected))//用户是否按OK键，是—true 否—false 
+			if (!CDisplay::GetInstance()->MultiSelect.Show(aSelected))//用户是否按OK键，是—true 否—false
 			{
 				break;
 			}
@@ -306,13 +306,13 @@ short CStdDataStream::ReadDataStream (vector<CBinary> *paidDataStream)
 		do
 		{
 #if 1
-			m_ReceiveFrame = g_pCommWithEcu->SendReceive(m_SendFrame, true);//发送并取得返回值,并设置循环执行标志
+			m_ReceiveFrame = CCommWithEcu::GetInstance()->SendReceive(m_SendFrame, true);//发送并取得返回值,并设置循环执行标志
 			
 			if(0==m_ReceiveFrame.size())
 			{
 				//有发送帧未得到应答，直接返回?
 				//发送一条命令，停止发送数据流命令
-				g_pCommWithEcu->GetStatus(GS_CHANNEL_SIGNAL);
+				CCommWithEcu::GetInstance()->GetStatus(GS_CHANNEL_SIGNAL);
 
 				return -22;
 			}
@@ -321,7 +321,7 @@ short CStdDataStream::ReadDataStream (vector<CBinary> *paidDataStream)
 			{
 				//有发送帧未得到应答，直接返回?
 				//发送一条命令，停止发送数据流命令
-				g_pCommWithEcu->GetStatus(GS_CHANNEL_SIGNAL);
+				CCommWithEcu::GetInstance()->GetStatus(GS_CHANNEL_SIGNAL);
 				return -22;
 			}
 
@@ -330,7 +330,7 @@ short CStdDataStream::ReadDataStream (vector<CBinary> *paidDataStream)
 			{
 				//有发送帧未得到应答，直接返回?
 				//发送一条命令，停止发送数据流命令
-				g_pCommWithEcu->GetStatus(GS_CHANNEL_SIGNAL);
+				CCommWithEcu::GetInstance()->GetStatus(GS_CHANNEL_SIGNAL);
 				return -22;
 			}
 
@@ -356,7 +356,7 @@ short CStdDataStream::ReadDataStream (vector<CBinary> *paidDataStream)
 			}
 #endif
 
-			g_pDisplay->DataStream.Init();
+			CDisplay::GetInstance()->DataStream.Init();
 
 			for (lIter = m_listDsIdSendFrame.begin(); lIter != m_listDsIdSendFrame.end(); lIter++)
 			{	
@@ -417,11 +417,11 @@ short CStdDataStream::ReadDataStream (vector<CBinary> *paidDataStream)
 					}				
 				}
 
-				g_pDisplay->DataStream.Add(lIter->idDataStream, strDsValue);
+				CDisplay::GetInstance()->DataStream.Add(lIter->idDataStream, strDsValue);
 			}
 
 			// 显示返回结果
-			if (g_pDisplay->DataStream.Show() == adsIDBACK)
+			if (CDisplay::GetInstance()->DataStream.Show() == adsIDBACK)
 			{
 				bLoopDsProcess = false;
 			}
@@ -431,7 +431,7 @@ short CStdDataStream::ReadDataStream (vector<CBinary> *paidDataStream)
 		}while(bLoopDsProcess);
 
 		//发送一条命令，停止发送数据流命令
-		g_pCommWithEcu->GetStatus(GS_CHANNEL_SIGNAL);
+		CCommWithEcu::GetInstance()->GetStatus(GS_CHANNEL_SIGNAL);
 
 	}while(true);  // 反复读数据流
 

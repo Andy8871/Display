@@ -59,7 +59,7 @@ private:
 	jmethodID m_guiCallbackWaitForResponse;
 	jmethodID m_guiCallbackImmediate;
 	jclass m_clazz;
-	JNIEnv* env;
+	JNIEnv* m_env;
 	jbyteArray m_byteData;
 	char* m_comBuff;
 };

@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.IBinder;
@@ -72,6 +73,10 @@ public class Controller extends Service implements ControllerProtocol,
 	public int onStartCommand(Intent intent, int flags, int startId) {
 
 		Log.i(TAG, "onStartCommand");
+		/*String libName = Environment.getExternalStorageDirectory().getPath();
+		libName += "/Vpecker/scan/OBDII/OBDII/EN/libOBDII.so";
+		System.load(libName);
+		Log.i(TAG, "libName: " + libName);*/
 		// 初始化工作
 		// 设置控制状态为初始状态
 		controllerState = new OriginalState(this);

@@ -2,10 +2,8 @@
 #include "Information.h"
 #include "CommWithDisplay.h"
 #include "assert.h"
-#include <android/log.h>
-#ifdef WIN32
-#include <tchar.h>
-#endif
+#include "LogCat.h"
+
 #include "ProFile.h"
 
 static const char* TAG = "CCommunicationWithDisplay";
@@ -36,14 +34,23 @@ bool CCommunicationWithDisplay::CreateConnect(JNIEnv* env)
 {
 	m_pCommBuffer = new char[0xFFFF];
 	if (NULL == m_pCommBuffer)
+	{
+		LOG_DEBUG(TAG, "NULL == m_pCommBuffer");
 		return false;
+	}
 
 	m_pComm = CCommBase::GetInstance();
 	if (NULL == m_pComm)
+	{
+		LOG_DEBUG(TAG, "NULL == m_pCommBuffer");
 		return false;
+	}
+
 
 	if (!m_pComm->Connect(env))
+	{
 		return false;
+	}
 	// Çå¿Õ·¢ËÍ»º³åÇø
 	Clear();
 

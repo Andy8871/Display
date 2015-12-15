@@ -36,26 +36,26 @@ class CRunEnvironment
 
 	public:
 		// 设置显示程序工作目录
-		static void SetDisplayDirectory(char* pDirectory);
+		static void SetDisplayDirectory(const char* pDirectory);
 
 		// 取得显示程序工作目录
 		static string GetDisplayDirectory();
 
 		// 设置诊断程序工作目录
-		static void SetDiagnosisDirectory(char* pDirectory);
+		static void SetDiagnosisDirectory(const char* pDirectory);
 
 		// 取得诊断程序工作目录
 		static string GetDiagnosisDirectory();
 
 		// 设置语言代码
-		static void SetLanguage(char* pLanguage);
+		static void SetLanguage(const char* pLanguage);
 
 		// 取得语言代码
 		static string GetLanguage();
 
 		//add by scf 2007.2.13
 		// 设置序列号
-		static void SetSerialNumber(char* pSerailNumber);
+		static void SetSerialNumber(const char* pSerailNumber);
 
 		//add by scf 2007.2.13
 		// 设置序列号

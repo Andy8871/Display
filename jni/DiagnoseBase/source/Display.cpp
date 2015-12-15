@@ -4,7 +4,7 @@
 #include "Database.h"
 #include "assert.h"
 //#include "Net.h"
-#include "ResStr.h"
+//#include "ResStr.h"
 #include "Information.h"
 //#include "SecurityBaseClass.h"
 //#pragma comment (lib,"D:\\v30\\adsStd\\w32lib\\SecurityBaseClass.lib")
@@ -38,14 +38,34 @@ void adsSleep(int iMilliseconds)
 	sleep(iMilliseconds);
 }
 
-CDisplay * g_pDisplay = NULL;
+/*CDisplay * g_pDisplay = NULL;
 
 CDisplay* getDisplayObject(void)
 {
 	__android_log_write(ANDROID_LOG_DEBUG, "CDisplay", "getDisplayObject");
 	g_pDisplay = new CDisplay();
 	return g_pDisplay;
+}*/
+
+
+CDisplay* CDisplay::m_pInstance = NULL;
+
+/* 多线程安全创建单例模式 */
+CDisplay* CDisplay::GetInstance()
+{
+	pthread_mutex_t mutex_t = PTHREAD_MUTEX_INITIALIZER;
+	pthread_mutex_init(&mutex_t, NULL);
+	if (NULL == m_pInstance)
+	{
+		pthread_mutex_lock(&mutex_t);
+		if (NULL == m_pInstance)
+			m_pInstance = new CDisplay();
+		pthread_mutex_unlock(&mutex_t);
+	}
+	pthread_mutex_destroy(&mutex_t);
+	return m_pInstance;
 }
+
 bool CDisplay::m_bIsDebug = false;
 
 

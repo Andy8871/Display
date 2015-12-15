@@ -76,7 +76,7 @@ LANGUAGE_ITEM LanguageItem[MAX_LANGUAGE_ITEM] = //hpy add
   返 回 值：无
   说    明：无
 -----------------------------------------------------------------------------*/
-void CRunEnvironment::SetDisplayDirectory(char* pDirectory)
+void CRunEnvironment::SetDisplayDirectory(const char* pDirectory)
 {
 	m_strDisplayDirectory = pDirectory;
 }
@@ -98,7 +98,7 @@ string CRunEnvironment::GetDisplayDirectory()
   返 回 值：无
   说    明：无
 -----------------------------------------------------------------------------*/
-void CRunEnvironment::SetDiagnosisDirectory(char* pDirectory)
+void CRunEnvironment::SetDiagnosisDirectory(const char* pDirectory)
 {
 	m_strDiagnosisDirectory = pDirectory;
 }
@@ -120,7 +120,7 @@ string CRunEnvironment::GetDiagnosisDirectory()
   返 回 值：无
   说    明：无
 -----------------------------------------------------------------------------*/
-void CRunEnvironment::SetLanguage(char* pLanguage)
+void CRunEnvironment::SetLanguage(const char* pLanguage)
 {
 	m_strLanguage = pLanguage;
 }
@@ -144,7 +144,7 @@ string CRunEnvironment::GetLanguage()
   返 回 值：无
   说    明：无
 -----------------------------------------------------------------------------*/
-void CRunEnvironment::SetSerialNumber(char* pSerialNumber)
+void CRunEnvironment::SetSerialNumber(const char* pSerialNumber)
 {
 	m_strSerialNumber = pSerialNumber;
 }
