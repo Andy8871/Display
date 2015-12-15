@@ -115,7 +115,6 @@ CDisplay::~CDisplay()
 #if 1//#if 0	//hpy modified from 0 to 1
 bool CDisplay::Init(JNIEnv* env)
 {
-	__android_log_write(ANDROID_LOG_DEBUG, "CDisplay", "Init()");
 	m_Menu.SetCommunicationPointer(&m_SendAndReceive); 
 	m_TroubleCode.SetCommunicationPointer(&m_SendAndReceive); 
 	m_DataStream.SetCommunicationPointer(&m_SendAndReceive); 
@@ -131,10 +130,6 @@ bool CDisplay::Init(JNIEnv* env)
 */
 
 	bool b=m_SendAndReceive.CreateConnect(env);
-	if (b)
-		__android_log_write(ANDROID_LOG_DEBUG, "CDisplay", "CreateConnect() OK");
-	else
-		__android_log_write(ANDROID_LOG_DEBUG, "CDisplay", "CreateConnect() failed");
 
 //	NetInit();//add by yxp 2007.4.2
 	return b;
@@ -444,7 +439,6 @@ unsigned short CDisplay::MessageBox(const char *pContain, const char *pTitle, un
 **************************************************************************************/
 unsigned short CDisplay::MessageBox(const char *pContain, const char *pTitle, unsigned short nFlag, unsigned short nView)
 {
-	__android_log_print(ANDROID_LOG_DEBUG, "CDisplay", "MessageBox Contain [%s] title[%s]", pContain, pTitle);
 	assert(NULL != pContain);
 	assert(NULL != pTitle);
 
@@ -459,17 +453,14 @@ unsigned short CDisplay::MessageBox(const char *pContain, const char *pTitle, un
 	char chFuction = DT_MESSAGE_BOX;
 
 	// 填充功能标志和调试标志
-	__android_log_write(ANDROID_LOG_DEBUG, "CDisplay", "m_SendAndReceive.Init(chFuction)");
 	m_SendAndReceive.Init(chFuction);
 	
 	// 消息框显示内容 :: = 〈按钮标志〉+〈内容文本字符串〉+〈标题文本字符串〉
-	__android_log_write(ANDROID_LOG_DEBUG, "CDisplay", "m_SendAndReceive.Add(nFlag)");
 	m_SendAndReceive.Add(nFlag);                           // 按纽标志
 	m_SendAndReceive.Add(pContain, strlen(pContain)+1);      // 内容提示
 	m_SendAndReceive.Add(pTitle,   strlen(pTitle)+1);        // 标题文本
 
 	m_SendAndReceive.Add(nView);        // 标题文本
-	__android_log_write(ANDROID_LOG_DEBUG, "CDisplay", "SendDataToDisplayWaitResponsion");
 	// 发送消息
 	m_SendAndReceive.SendDataToDisplayWaitResponsion();
 

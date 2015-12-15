@@ -14,8 +14,6 @@
 #include "LogCat.h"
 static const char* TAG = "DiagMain";
 
-//CCommWithEcu* g_pCommEcu = NULL; // 全局通信接口
-//CDisplay* g_pDisplay = NULL; // 全局显示接口
 float g_flLibVersion;
 
 /* 启动诊断程序 */

@@ -10,8 +10,6 @@
 #include "RunEnvironment.h"
 #include "Binary.h"
 
-//extern CCommWithEcu* g_pCommEcu; //全局通信接口
-/*CDisplay * g_pDisplay = CDisplay::GetInstance(); //全局显示接口*/
 extern float g_flLibVersion;
 
 #define VEHICLE_NAME	"OBDII"
@@ -32,10 +30,6 @@ int CDiagnosisFrame::InitInstance(JNIEnv* env)
 {
 	CInformation::SetVehiclesSystemName(VEHICLE_NAME);
 	CInformation::SetVersion(DIAG_VERSION);
-
-	/*g_pDisplay = getDisplayObject();*/
-	//g_pCommEcu = getCommWithEcuObject();
-
 	g_flLibVersion = CInformation::GetVersion();
 	unsigned char nRet = CDisplay::GetInstance()->Init(env);
 
@@ -45,8 +39,6 @@ int CDiagnosisFrame::InitInstance(JNIEnv* env)
 		CCommWithEcu::GetInstance()->Init();
 		try
 		{
-			__android_log_write(ANDROID_LOG_DEBUG, "CDiagnosisFrame",
-					"DiagnosisMain()");
 			iRet = DiagnosisMain(); // 诊断程序入口函数，进行诊断功能
 
 		} catch (CEcuCommException & e)
