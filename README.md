@@ -1,2 +1,0 @@
-# Display
-OBDII for Android 
